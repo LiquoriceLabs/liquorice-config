@@ -1,0 +1,50 @@
+import java.text.SimpleDateFormat
+
+def df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss'Z'")
+df.setTimeZone(TimeZone.getTimeZone("UTC"))
+def buildTime = df.format(new Date())
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+
+    sourceCompatibility = 1.7
+    def vendor = 'Liquorice.io'
+
+    group = 'io.liquorice'
+    version = '0.0.1-SNAPSHOT'
+
+    jar.doFirst {
+        manifest {
+            attributes(
+                    'Manifest-Version'			: '1.0',
+                    'Created-By'				: vendor,
+                    'Specification-Title'		: project.name,
+                    'Specification-Version'		: version,
+                    'Specification-Vendor'		: vendor,
+                    'Implementation-Title'		: project.name,
+                    'Implementation-Version'	: version,
+                    'Implementation-Vendor'		: vendor,
+                    'Class-Path'				: configurations.compile.collect { it.getName() }.join(' '),
+                    'Build-Name'				: "${group}:${project.name}:?:${version}",
+                    'Build-Time'				: buildTime
+            )
+        }
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    dependencies {
+        compile group: 'org.json', name: 'json', version: '20140107'
+
+        testCompile group: 'org.testng', name: 'testng', version: '6.9.4'
+        testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
+    }
+
+    test {
+        useTestNG()
+    }
+}
