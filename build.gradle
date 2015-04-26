@@ -1,3 +1,176 @@
-task wrapper(type: Wrapper) {
-	gradleVersion = '2.3'
+import java.text.SimpleDateFormat
+
+def date = new Date()
+
+def buildTimeDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss'Z'")
+buildTimeDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
+def buildTime = buildTimeDateFormat.format(date)
+
+def versionTimeDateFormat = new SimpleDateFormat("yyyyMMdd")
+versionTimeDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
+def versionTime = versionTimeDateFormat.format(date)
+
+def majorVersion = 0
+def minorVersion = 1
+
+apply plugin: 'base'
+apply plugin: 'java'
+
+clean.doFirst {
+    delete "${projectDir}/build"
+}
+
+subprojects {
+    apply plugin: 'checkstyle'
+    apply plugin: 'findbugs'
+    /** Uncomment to enable local jacoco reporting **/
+    // apply plugin: 'jacoco'
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'pmd'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    def vendor = 'Liquorice.io'
+
+    group = 'io.liquorice.config'
+    version = "${majorVersion}.${minorVersion}.${versionTime}"
+
+    jar.doFirst {
+        manifest {
+            attributes(
+                    'Manifest-Version'			: '1.0',
+                    'Created-By'				: vendor,
+                    'Specification-Title'		: project.name,
+                    'Specification-Version'		: version,
+                    'Specification-Vendor'		: vendor,
+                    'Implementation-Title'		: project.name,
+                    'Implementation-Version'	: version,
+                    'Implementation-Vendor'		: vendor,
+                    'Class-Path'				: configurations.compile.collect { it.getName() }.join(' '),
+                    'Build-Name'				: "${group}:${project.name}:?:${version}",
+                    'Build-Time'				: buildTime
+            )
+        }
+    }
+
+    sourceSets {
+        integrationTest {
+            java.srcDir file('src/integration-test/java')
+            resources.srcDir file('src/integration-test/resources')
+        }
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    dependencies {
+        testCompile group: 'org.testng', name: 'testng', version: '6.9.4'
+        testCompile group: 'org.mockito', name: 'mockito-core', version: '2.2.26'
+
+        integrationTestCompile sourceSets.main.output
+        integrationTestCompile configurations.testCompile
+        integrationTestRuntime sourceSets.test.output
+        integrationTestRuntime configurations.testRuntime
+    }
+
+    // Unit testing
+    test {
+        useTestNG()
+
+        // Code coverage
+        /** Uncomment to enable local jacoco reporting **/
+        /*
+        jacoco {
+            destinationFile = file("${buildDir}/jacoco/jacoco-unit.exec")
+            classDumpFile = file("${buildDir}/jacoco/test")
+        }
+        */
+    }
+
+
+    // Integration testing
+    configurations {
+        integrationTestCompile.extendsFrom testCompile
+        integrationTestRuntime.extendsFrom testRuntime
+    }
+
+    task integrationTest(type: Test) {
+        testClassesDir = sourceSets.integrationTest.output.classesDir
+        classpath = sourceSets.integrationTest.runtimeClasspath
+        mustRunAfter test
+        useTestNG()
+
+        // Code Coverage
+        /** Uncomment to enable local jacoco reporting **/
+        /*
+        jacoco {
+            destinationFile = file("${buildDir}/jacoco/jacoco-integration.exec")
+            classDumpFile = file("${buildDir}/jacoco/integration-test")
+        }
+        */
+    }
+    check.dependsOn integrationTest
+
+
+    // Static Code Analysis
+    checkstyle {
+        configFile = new File("${projectDir}/../config/checkstyle/checkstyle.xml")
+        ignoreFailures = false
+        sourceSets = [ sourceSets.main, sourceSets.test, sourceSets.integrationTest ]
+        toolVersion = '6.7'
+    }
+
+    findbugsMain {
+        excludeFilter file("${projectDir}/config/findbugs/findbugs-exclude.xml")
+    }
+
+
+    // Code coverage
+    /** Uncomment to enable local jacoco reporting **/
+    /*
+    jacoco {
+        toolVersion = "0.7.1.201405082137"
+    }
+
+    jacocoTestReport {
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports after running tests."
+        reports {
+            xml.enabled = true
+            csv.enabled false
+            html.enabled = true
+        }
+        additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
+        executionData = files("${buildDir}/jacoco/jacoco-unit.exec", "${buildDir}/jacoco/jacoco-integration.exec")
+    }
+    */
+
+
+    // Reporting
+    tasks.withType(Test) {
+        reports.html.destination = file("${reporting.baseDir}/${name}")
+    }
+
+    tasks.withType(FindBugs) {
+        reports {
+            html.enabled = false
+            xml.enabled = true
+        }
+    }
+}
+
+task generateAggregateDocs(type: Javadoc) {
+    source subprojects.collect {project -> project.sourceSets.main.allJava }
+    classpath = files(subprojects.collect {project -> project.sourceSets.main.compileClasspath})
+    destinationDir = new File("${projectDir}/build/docs/javadocs")
+}
+
+task archiveDocs(type: Zip) {
+    baseName 'docs'
+    from 'build/docs'
+    mustRunAfter generateAggregateDocs
 }
