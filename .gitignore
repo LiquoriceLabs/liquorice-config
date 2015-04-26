@@ -1,0 +1,30 @@
+# Java
+*.class
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Mac
+.DS_Store
+.metadata
+
+# Windows
+Thumbs.db
+
+# Gradle
+build/
+.gradle/
+
+# Package Files #
+!gradle/wrapper/gradle-wrapper.jar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
