@@ -1,0 +1,1 @@
+include ':liquorice-core', 'liquorice-server'
