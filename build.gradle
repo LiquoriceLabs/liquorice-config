@@ -32,6 +32,13 @@ subprojects {
         }
     }
 
+    sourceSets {
+        integrationTest {
+            java.srcDir file('src/integration-test/java')
+            resources.srcDir file('src/integration-test/resources')
+        }
+    }
+
     repositories {
         mavenLocal()
         mavenCentral()
@@ -42,9 +49,36 @@ subprojects {
 
         testCompile group: 'org.testng', name: 'testng', version: '6.9.4'
         testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
+
+        integrationTestCompile sourceSets.main.output
+        integrationTestCompile configurations.testCompile
+        integrationTestRuntime sourceSets.test.output
+        integrationTestRuntime configurations.testRuntime
     }
 
+    // Unit testing
     test {
         useTestNG()
+    }
+
+
+    // Integration testing
+    configurations {
+        integrationTestCompile.extendsFrom testCompile
+        integrationTestRuntime.extendsFrom testRuntime
+    }
+
+    task integrationTest(type: Test) {
+        testClassesDir = sourceSets.integrationTest.output.classesDir
+        classpath = sourceSets.integrationTest.runtimeClasspath
+        mustRunAfter test
+        useTestNG()
+    }
+    check.dependsOn integrationTest
+
+
+    // Reporting
+    tasks.withType(Test) {
+        reports.html.destination = file("${reporting.baseDir}/${name}")
     }
 }
