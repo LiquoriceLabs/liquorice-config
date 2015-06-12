@@ -8,5 +8,5 @@ import io.liquorice.core.cache.exception.CacheWarmingException;
  * Created by mthorpe on 6/10/15.
  */
 public interface StorageCacheLayer extends FlatCacheLayer {
-    void warm(Path path) throws CacheWarmingException;
+    void warm(Path path, String encoding) throws CacheWarmingException;
 }
