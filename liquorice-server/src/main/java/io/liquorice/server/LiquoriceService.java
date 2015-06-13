@@ -13,7 +13,7 @@ import io.liquorice.core.util.VariableUtilities;
  */
 public class LiquoriceService {
     public static final String ENV_DATA_DIRECTORY = "LIQUORICE_DATA";
-    private final String DEFAULT_DATA_DIRECTORY = "./data";
+    private static final String DEFAULT_DATA_DIRECTORY = "./data";
     private String dataDirectory = null;
 
     /**

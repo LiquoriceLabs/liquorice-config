@@ -1,10 +1,17 @@
 import java.text.SimpleDateFormat
 
-def df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss'Z'")
-df.setTimeZone(TimeZone.getTimeZone("UTC"))
-def buildTime = df.format(new Date())
+def date = new Date()
+
+def buildTimeDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss'Z'")
+buildTimeDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
+def buildTime = buildTimeDateFormat.format(date)
+
+def versionTimeDateFormat = new SimpleDateFormat("yyyyMMdd")
+versionTimeDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
+def versionTime = versionTimeDateFormat.format(date)
 
 subprojects {
+    apply plugin: 'findbugs'
     apply plugin: 'java'
     apply plugin: 'maven'
 
@@ -12,7 +19,7 @@ subprojects {
     def vendor = 'Liquorice.io'
 
     group = 'io.liquorice'
-    version = '0.0.1-SNAPSHOT'
+    version = "0.1.${versionTime}"
 
     jar.doFirst {
         manifest {
@@ -76,9 +83,24 @@ subprojects {
     }
     check.dependsOn integrationTest
 
+    // Findbugs
+    findbugsMain {
+        def exclusions = "${projectDir}/support/findbugs-exclude.xml"
+        if(new File(exclusions).exists()) {
+            excludeFilter file(exclusions)
+        }
+    }
+
 
     // Reporting
     tasks.withType(Test) {
         reports.html.destination = file("${reporting.baseDir}/${name}")
+    }
+
+    tasks.withType(FindBugs) {
+        reports {
+            html.enabled = true
+            xml.enabled = false
+        }
     }
 }

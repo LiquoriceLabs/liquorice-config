@@ -2,6 +2,7 @@ package io.liquorice.core.cache.memory;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import io.liquorice.core.cache.AbstractFlatCacheLayer;
 import io.liquorice.core.cache.FlatCacheLayer;
@@ -72,8 +73,8 @@ public class BlackHoleFlatCache extends AbstractFlatCacheLayer implements FlatCa
             }
 
             @Override
-            public Object next() {
-                return null;
+            public Object next() throws NoSuchElementException {
+                throw new NoSuchElementException();
             }
 
             @Override

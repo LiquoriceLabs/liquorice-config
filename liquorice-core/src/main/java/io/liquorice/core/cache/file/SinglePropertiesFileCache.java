@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import io.liquorice.core.cache.AbstractFlatCacheLayer;
 import io.liquorice.core.cache.StorageCacheLayer;
@@ -93,11 +94,14 @@ public class SinglePropertiesFileCache extends AbstractFlatCacheLayer implements
 
     @Override
     public void warm(Path path, String encoding) throws CacheWarmingException {
+        InputStream inputStream;
+
         try {
-            warm(new FileInputStream(path.toFile().getAbsolutePath()), encoding);
+            inputStream = new FileInputStream(path.toFile().getAbsolutePath());
+            warm(inputStream, encoding);
         }
-        catch(IOException e) {
-            throw new CacheWarmingException("Failed to warm cache", e);
+        catch(IOException e1) {
+            throw new CacheWarmingException("Failed to warm cache", e1);
         }
     }
 
@@ -132,9 +136,11 @@ public class SinglePropertiesFileCache extends AbstractFlatCacheLayer implements
                 }
 
                 @Override
-                public Object next() {
+                public Object next() throws NoSuchElementException {
                     if(bufferedLine == null) {
-                        hasNext();
+                        if(!hasNext()) {
+                            throw new NoSuchElementException();
+                        }
                     }
 
                     String line = bufferedLine;
@@ -156,8 +162,8 @@ public class SinglePropertiesFileCache extends AbstractFlatCacheLayer implements
                 }
 
                 @Override
-                public Object next() {
-                    return null;
+                public Object next() throws NoSuchElementException {
+                    throw new NoSuchElementException();
                 }
 
                 @Override

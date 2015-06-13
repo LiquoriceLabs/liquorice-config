@@ -3,6 +3,7 @@ package io.liquorice.core.cache.memory;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import io.liquorice.core.cache.AbstractFlatCacheLayer;
 import io.liquorice.core.cache.FlatCacheLayer;
@@ -109,8 +110,13 @@ public class KeyValueFlatCache extends AbstractFlatCacheLayer implements FlatCac
             }
 
             @Override
-            public Object next() {
-                return it.next();
+            public Object next() throws NoSuchElementException {
+                if(!it.hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                else {
+                    return it.next();
+                }
             }
 
             @Override

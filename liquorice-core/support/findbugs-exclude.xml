@@ -1,0 +1,7 @@
+<FindBugsFilter>
+    <Match>
+        <Class name="io.liquorice.core.cache.file.SinglePropertiesFileCache"/>
+        <Method name="warm" params="java.nio.file.Path,java.lang.String" returns="void"/>
+        <Bug pattern="OBL_UNSATISFIED_OBLIGATION"/>
+    </Match>
+</FindBugsFilter>
