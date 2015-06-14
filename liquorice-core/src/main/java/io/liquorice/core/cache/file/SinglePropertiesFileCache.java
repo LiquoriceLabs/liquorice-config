@@ -128,7 +128,7 @@ public class SinglePropertiesFileCache extends AbstractFlatCacheLayer implements
                 public boolean hasNext() {
                     try {
                         bufferedLine = cacheReader.readLine();
-                        return (bufferedLine != null);
+                        return bufferedLine != null;
                     }
                     catch(IOException e) {
                         return false;
@@ -137,10 +137,8 @@ public class SinglePropertiesFileCache extends AbstractFlatCacheLayer implements
 
                 @Override
                 public Object next() throws NoSuchElementException {
-                    if(bufferedLine == null) {
-                        if(!hasNext()) {
-                            throw new NoSuchElementException();
-                        }
+                    if(bufferedLine == null && !hasNext()) {
+                        throw new NoSuchElementException();
                     }
 
                     String line = bufferedLine;

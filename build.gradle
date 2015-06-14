@@ -11,9 +11,12 @@ versionTimeDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
 def versionTime = versionTimeDateFormat.format(date)
 
 subprojects {
+    apply plugin: 'checkstyle'
     apply plugin: 'findbugs'
+    apply plugin: 'jacoco'
     apply plugin: 'java'
     apply plugin: 'maven'
+    apply plugin: 'pmd'
 
     sourceCompatibility = 1.7
     def vendor = 'Liquorice.io'
@@ -66,6 +69,12 @@ subprojects {
     // Unit testing
     test {
         useTestNG()
+
+        // Code coverage
+        jacoco {
+            destinationFile = file("${buildDir}/jacoco/jacoco-unit.exec")
+            classDumpFile = file("${buildDir}/jacoco/test")
+        }
     }
 
 
@@ -80,15 +89,40 @@ subprojects {
         classpath = sourceSets.integrationTest.runtimeClasspath
         mustRunAfter test
         useTestNG()
+
+        jacoco {
+            destinationFile = file("${buildDir}/jacoco/jacoco-integration.exec")
+            classDumpFile = file("${buildDir}/jacoco/integration-test")
+        }
     }
     check.dependsOn integrationTest
 
-    // Findbugs
+
+    // Static Code Analysis
+    checkstyle {
+        sourceSets = [ sourceSets.main, sourceSets.test, sourceSets.integrationTest ]
+    }
+
     findbugsMain {
-        def exclusions = "${projectDir}/support/findbugs-exclude.xml"
-        if(new File(exclusions).exists()) {
-            excludeFilter file(exclusions)
+        excludeFilter file("${projectDir}/config/findbugs/findbugs-exclude.xml")
+    }
+
+
+    // Code coverage
+    jacoco {
+        toolVersion = "0.7.1.201405082137"
+    }
+
+    jacocoTestReport {
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports after running tests."
+        reports {
+            xml.enabled = true
+            csv.enabled false
+            html.enabled = true
         }
+        additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
+        executionData = files("${buildDir}/jacoco/jacoco-unit.exec", "${buildDir}/jacoco/jacoco-integration.exec")
     }
 
 

@@ -10,6 +10,11 @@ import io.liquorice.core.cache.file.SinglePropertiesFileCache;
 import io.liquorice.core.cache.memory.BlackHoleFlatCache;
 import io.liquorice.core.cache.memory.KeyValueFlatCache;
 
+import java.io.File;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  * Created by mthorpe on 6/11/15.
  */
@@ -27,7 +32,13 @@ public class MultiLevelFlatCacheIntegrationTest {
     private FlatCacheLayer keyValueFlatCache;
 
     @Test
-    public void testTwoLevelCachingForGet() {
+    public void testTwoLevelCachingForGet() throws Exception {
+        Path propertiesPath = null;
+        URL propertiesUrl = this.getClass().getClassLoader().getResource("simple-cache.properties");
+        if(propertiesUrl != null) {
+            propertiesPath = Paths.get(propertiesUrl.getPath());
+        }
+
         // Create mocks
         mockMiddleCache = Mockito.mock(BlackHoleFlatCache.class);
         mockTerminalCache = Mockito.mock(BlackHoleFlatCache.class);
@@ -35,8 +46,7 @@ public class MultiLevelFlatCacheIntegrationTest {
         // Setup real caches
         simpleFileCache = new SinglePropertiesFileCache();
         simpleFileCache.setWriteThroughCache(mockTerminalCache);
-        ((SinglePropertiesFileCache) simpleFileCache).warm(
-                getClass().getClassLoader().getResourceAsStream("simple-cache.properties"), "UTF-8");
+        ((SinglePropertiesFileCache) simpleFileCache).warm(propertiesPath, "UTF-8");
         keyValueFlatCache = new KeyValueFlatCache();
         keyValueFlatCache.setWriteThroughCache(mockMiddleCache);
 
