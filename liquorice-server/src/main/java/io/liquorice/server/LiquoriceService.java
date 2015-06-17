@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 
 import io.liquorice.core.config.ConfigurationException;
-import io.liquorice.core.util.VariableUtilities;
+import io.liquorice.core.config.VariableUtilities;
 
 /**
  * Created by mthorpe on 4/26/15.

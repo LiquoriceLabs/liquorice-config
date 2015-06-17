@@ -1,4 +1,4 @@
-package io.liquorice.core.util;
+package io.liquorice.core.config;
 
 /**
  * Created by mthorpe on 4/26/15. </p> Convenience methods for manipulating property values

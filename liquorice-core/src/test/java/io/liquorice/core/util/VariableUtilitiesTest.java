@@ -1,5 +1,6 @@
 package io.liquorice.core.util;
 
+import io.liquorice.core.config.VariableUtilities;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;

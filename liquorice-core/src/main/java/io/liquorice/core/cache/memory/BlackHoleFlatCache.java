@@ -63,24 +63,4 @@ public class BlackHoleFlatCache extends AbstractFlatCacheLayer implements FlatCa
     public Object remove(String key) throws CacheInitializationException {
         return null;
     }
-
-    @Override
-    public Iterator iterator() {
-        return new Iterator() {
-            @Override
-            public boolean hasNext() {
-                return false;
-            }
-
-            @Override
-            public Object next() throws NoSuchElementException {
-                throw new NoSuchElementException();
-            }
-
-            @Override
-            public void remove() {
-
-            }
-        };
-    }
 }
