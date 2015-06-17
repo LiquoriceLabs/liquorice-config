@@ -7,16 +7,22 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import io.liquorice.core.cache.AbstractFlatCacheLayer;
+import io.liquorice.core.cache.NullIterator;
 import io.liquorice.core.cache.StorageCacheLayer;
 import io.liquorice.core.cache.exception.CacheClearingException;
 import io.liquorice.core.cache.exception.CacheInitializationException;
 import io.liquorice.core.cache.exception.CacheWarmingException;
+import io.liquorice.core.logging.Log;
+import io.liquorice.core.logging.LogFactory;
 
 /**
  * Created by mthorpe on 6/10/15.
  */
 public class SinglePropertiesFileCache extends AbstractFlatCacheLayer implements StorageCacheLayer {
+    private static final Log LOG = LogFactory.getLog(SinglePropertiesFileCache.class);
     private BufferedReader cacheReader;
+    private InputStream inputStream;
+    private String encoding;
 
     @Override
     public void clear() throws CacheClearingException {
@@ -97,7 +103,7 @@ public class SinglePropertiesFileCache extends AbstractFlatCacheLayer implements
         InputStream inputStream;
 
         try {
-            inputStream = new FileInputStream(path.toFile().getAbsolutePath());
+            inputStream = new FileInputStream(path.toFile());
             warm(inputStream, encoding);
         }
         catch(IOException e1) {
@@ -107,9 +113,9 @@ public class SinglePropertiesFileCache extends AbstractFlatCacheLayer implements
 
     public void warm(InputStream inputStream, String encoding) throws CacheWarmingException {
         try {
-            this.cacheReader = new BufferedReader(new InputStreamReader(inputStream, encoding));
-            this.cacheReader.mark(1 << 24);
-            this.cacheReader.reset();
+            this.inputStream = inputStream;
+            this.encoding = encoding;
+            initReader();
         }
         catch(IOException e) {
             throw new CacheWarmingException("Failed to warm cache", e);
@@ -153,29 +159,20 @@ public class SinglePropertiesFileCache extends AbstractFlatCacheLayer implements
             };
         }
         catch(IOException e) {
-            return new Iterator() {
-                @Override
-                public boolean hasNext() {
-                    return false;
-                }
-
-                @Override
-                public Object next() throws NoSuchElementException {
-                    throw new NoSuchElementException();
-                }
-
-                @Override
-                public void remove() {
-
-                }
-            };
+            LOG.warning(e);
+            return new NullIterator();
         }
     }
 
+    private void initReader() throws IOException {
+        this.cacheReader = new BufferedReader(new InputStreamReader(inputStream, encoding));
+        this.cacheReader.mark(1 << 24);
+        this.cacheReader.reset();
+    }
+
     private String findPropertyInFile(String propertyName) throws CacheInitializationException {
-        Iterator iterator = this.iterator();
-        while(iterator.hasNext()) {
-            String line = (String) iterator.next();
+        for(Object item : this) {
+            String line = (String) item;
             if(line.contains("=") && !line.startsWith("#")) {
                 String[] parts = line.split("=");
                 if (parts[0].equals(propertyName)) {
