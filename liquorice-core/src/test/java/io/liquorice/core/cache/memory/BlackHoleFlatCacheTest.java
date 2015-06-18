@@ -18,10 +18,14 @@ public class BlackHoleFlatCacheTest {
     @BeforeTest
     public void setup() {
         cache = new BlackHoleFlatCache();
-        cache.put(CacheProperties.BOOLEAN_KEY, CacheProperties.CUSTOM_BOOLEAN_VALUE);
-        cache.put(CacheProperties.DOUBLE_KEY, CacheProperties.CUSTOM_DOUBLE_VALUE);
-        cache.put(CacheProperties.INT_KEY, CacheProperties.CUSTOM_INT_VALUE);
-        cache.put(CacheProperties.STRING_KEY, CacheProperties.CUSTOM_STRING_VALUE);
+        Object existingValue = cache.put(CacheProperties.BOOLEAN_KEY, CacheProperties.CUSTOM_BOOLEAN_VALUE);
+        Assert.assertNull(existingValue);
+        existingValue = cache.put(CacheProperties.DOUBLE_KEY, CacheProperties.CUSTOM_DOUBLE_VALUE);
+        Assert.assertNull(existingValue);
+        existingValue = cache.put(CacheProperties.INT_KEY, CacheProperties.CUSTOM_INT_VALUE);
+        Assert.assertNull(existingValue);
+        existingValue = cache.put(CacheProperties.STRING_KEY, CacheProperties.CUSTOM_STRING_VALUE);
+        Assert.assertNull(existingValue);
     }
 
     @Test
