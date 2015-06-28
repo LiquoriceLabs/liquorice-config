@@ -13,7 +13,8 @@ def versionTime = versionTimeDateFormat.format(date)
 subprojects {
     apply plugin: 'checkstyle'
     apply plugin: 'findbugs'
-    apply plugin: 'jacoco'
+    /** Uncomment to enable local jacoco reporting **/
+    // apply plugin: 'jacoco'
     apply plugin: 'java'
     apply plugin: 'maven'
     apply plugin: 'pmd'
@@ -71,10 +72,13 @@ subprojects {
         useTestNG()
 
         // Code coverage
+        /** Uncomment to enable local jacoco reporting **/
+        /*
         jacoco {
             destinationFile = file("${buildDir}/jacoco/jacoco-unit.exec")
             classDumpFile = file("${buildDir}/jacoco/test")
         }
+        */
     }
 
 
@@ -90,16 +94,21 @@ subprojects {
         mustRunAfter test
         useTestNG()
 
+        // Code Coverage
+        /** Uncomment to enable local jacoco reporting **/
+        /*
         jacoco {
             destinationFile = file("${buildDir}/jacoco/jacoco-integration.exec")
             classDumpFile = file("${buildDir}/jacoco/integration-test")
         }
+        */
     }
     check.dependsOn integrationTest
 
 
     // Static Code Analysis
     checkstyle {
+        ignoreFailures = false
         sourceSets = [ sourceSets.main, sourceSets.test, sourceSets.integrationTest ]
     }
 
@@ -109,6 +118,8 @@ subprojects {
 
 
     // Code coverage
+    /** Uncomment to enable local jacoco reporting **/
+    /*
     jacoco {
         toolVersion = "0.7.1.201405082137"
     }
@@ -124,6 +135,7 @@ subprojects {
         additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
         executionData = files("${buildDir}/jacoco/jacoco-unit.exec", "${buildDir}/jacoco/jacoco-integration.exec")
     }
+    */
 
 
     // Reporting
@@ -133,8 +145,8 @@ subprojects {
 
     tasks.withType(FindBugs) {
         reports {
-            html.enabled = true
-            xml.enabled = false
+            html.enabled = false
+            xml.enabled = true
         }
     }
 }

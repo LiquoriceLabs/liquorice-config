@@ -1,6 +1,10 @@
 package io.liquorice.core.cache.file;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.Map;
@@ -20,6 +24,8 @@ import io.liquorice.core.logging.LogFactory;
  */
 public class SinglePropertiesFileCache extends AbstractFlatCacheLayer implements StorageCacheLayer {
     private static final Log LOG = LogFactory.getLog(SinglePropertiesFileCache.class);
+    private static final int MARK_SIZE_SHIFTER = 24;
+
     private BufferedReader cacheReader;
     private InputStream inputStream;
     private String encoding;
@@ -166,7 +172,7 @@ public class SinglePropertiesFileCache extends AbstractFlatCacheLayer implements
 
     private void initReader() throws IOException {
         this.cacheReader = new BufferedReader(new InputStreamReader(inputStream, encoding));
-        this.cacheReader.mark(1 << 24);
+        this.cacheReader.mark(1 << MARK_SIZE_SHIFTER);
         this.cacheReader.reset();
     }
 
