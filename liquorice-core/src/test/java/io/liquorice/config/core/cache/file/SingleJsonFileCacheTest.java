@@ -2,6 +2,8 @@ package io.liquorice.config.core.cache.file;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -10,41 +12,49 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import com.owlike.genson.Genson;
+
 import io.liquorice.config.core.cache.CacheLayer;
 import io.liquorice.config.core.cache.CacheProperties;
 
 /**
  * Created by mthorpe on 6/13/15.
  */
-public class SinglePropertiesFileCacheTest {
+public class SingleJsonFileCacheTest {
     private static final String ENCODING = "UTF-8";
-    private static final String FILE_CONTENTS = CacheProperties.BOOLEAN_KEY + "="
-            + CacheProperties.CUSTOM_BOOLEAN_VALUE + "\n" + CacheProperties.DOUBLE_KEY + "="
-            + CacheProperties.CUSTOM_DOUBLE_VALUE + "\n" + CacheProperties.INT_KEY + "="
-            + CacheProperties.CUSTOM_INT_VALUE + "\n" + CacheProperties.STRING_KEY + "="
-            + CacheProperties.CUSTOM_STRING_VALUE + "\n";
 
+    private Genson genson;
     private InputStream inputStream;
-    private SinglePropertiesFileCache singlePropertiesFileCache;
+    private SingleJsonFileCache singleJsonFileCache;
     private CacheLayer mockCache;
 
     @BeforeTest
     public void setup() throws Exception {
-        inputStream = new ByteArrayInputStream(FILE_CONTENTS.getBytes(ENCODING));
+        // Build genson object
+        genson = new Genson();
+        Map<String, Object> map = new HashMap<>();
+        map.put(CacheProperties.BOOLEAN_KEY, CacheProperties.CUSTOM_BOOLEAN_VALUE);
+        map.put(CacheProperties.DOUBLE_KEY, CacheProperties.CUSTOM_DOUBLE_VALUE);
+        map.put(CacheProperties.INT_KEY, CacheProperties.CUSTOM_INT_VALUE);
+        map.put(CacheProperties.STRING_KEY, CacheProperties.CUSTOM_STRING_VALUE);
+        String fileContents = genson.serialize(map);
+
+        // Setup mock data sources
+        inputStream = new ByteArrayInputStream(fileContents.getBytes(ENCODING));
         mockCache = Mockito.mock(SinglePropertiesFileCache.class);
-        singlePropertiesFileCache = new SinglePropertiesFileCache();
-        singlePropertiesFileCache.setWriteThroughCache(mockCache);
-        singlePropertiesFileCache.warm(inputStream, ENCODING);
+        singleJsonFileCache = new SingleJsonFileCache();
+        singleJsonFileCache.setWriteThroughCache(mockCache);
+        singleJsonFileCache.warm(inputStream, ENCODING);
         initDefaultAnswers();
     }
 
     @Test
     public void testGetBoolean() {
-        boolean actualResult = singlePropertiesFileCache.getBoolean(CacheProperties.BOOLEAN_KEY,
+        boolean actualResult = singleJsonFileCache.getBoolean(CacheProperties.BOOLEAN_KEY,
                 CacheProperties.DEFAULT_BOOLEAN_VALUE);
         Assert.assertEquals(actualResult, CacheProperties.CUSTOM_BOOLEAN_VALUE, "Existing key not found in cache:");
 
-        actualResult = singlePropertiesFileCache.getBoolean(CacheProperties.NON_EXISTENT_KEY,
+        actualResult = singleJsonFileCache.getBoolean(CacheProperties.NON_EXISTENT_KEY,
                 CacheProperties.DEFAULT_BOOLEAN_VALUE);
         Assert.assertEquals(actualResult, CacheProperties.DEFAULT_BOOLEAN_VALUE, "Non-existent key found in cache:");
 
@@ -53,11 +63,11 @@ public class SinglePropertiesFileCacheTest {
 
     @Test
     public void testGetDouble() {
-        double actualResult = singlePropertiesFileCache.getDouble(CacheProperties.DOUBLE_KEY,
+        double actualResult = singleJsonFileCache.getDouble(CacheProperties.DOUBLE_KEY,
                 CacheProperties.DEFAULT_DOUBLE_VALUE);
         Assert.assertEquals(actualResult, CacheProperties.CUSTOM_DOUBLE_VALUE, "Existing key not found in cache:");
 
-        actualResult = singlePropertiesFileCache.getDouble(CacheProperties.NON_EXISTENT_KEY,
+        actualResult = singleJsonFileCache.getDouble(CacheProperties.NON_EXISTENT_KEY,
                 CacheProperties.DEFAULT_DOUBLE_VALUE);
         Assert.assertEquals(actualResult, CacheProperties.DEFAULT_DOUBLE_VALUE, "Non-existent key found in cache:");
 
@@ -66,11 +76,10 @@ public class SinglePropertiesFileCacheTest {
 
     @Test
     public void testGetInt() {
-        int actualResult = singlePropertiesFileCache.getInt(CacheProperties.INT_KEY, CacheProperties.DEFAULT_INT_VALUE);
+        int actualResult = singleJsonFileCache.getInt(CacheProperties.INT_KEY, CacheProperties.DEFAULT_INT_VALUE);
         Assert.assertEquals(actualResult, CacheProperties.CUSTOM_INT_VALUE, "Existing key not found in cache:");
 
-        actualResult = singlePropertiesFileCache.getInt(CacheProperties.NON_EXISTENT_KEY,
-                CacheProperties.DEFAULT_INT_VALUE);
+        actualResult = singleJsonFileCache.getInt(CacheProperties.NON_EXISTENT_KEY, CacheProperties.DEFAULT_INT_VALUE);
         Assert.assertEquals(actualResult, CacheProperties.DEFAULT_INT_VALUE, "Non-existent key found in cache:");
 
         Mockito.verify(mockCache, Mockito.times(1)).getInt(Mockito.anyString(), Mockito.anyInt());
@@ -78,11 +87,11 @@ public class SinglePropertiesFileCacheTest {
 
     @Test
     public void testGetString() {
-        String actualResult = singlePropertiesFileCache.getString(CacheProperties.STRING_KEY,
+        String actualResult = singleJsonFileCache.getString(CacheProperties.STRING_KEY,
                 CacheProperties.DEFAULT_STRING_VALUE);
         Assert.assertEquals(actualResult, CacheProperties.CUSTOM_STRING_VALUE, "Existing key not found in cache:");
 
-        actualResult = singlePropertiesFileCache.getString(CacheProperties.NON_EXISTENT_KEY,
+        actualResult = singleJsonFileCache.getString(CacheProperties.NON_EXISTENT_KEY,
                 CacheProperties.DEFAULT_STRING_VALUE);
         Assert.assertEquals(actualResult, CacheProperties.DEFAULT_STRING_VALUE, "Non-existent key found in cache:");
 

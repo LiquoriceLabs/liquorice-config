@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import com.owlike.genson.Genson;
+
 import io.liquorice.config.core.cache.CacheLayer;
 import io.liquorice.config.core.cache.NullIterator;
 import io.liquorice.config.core.logging.Log;
@@ -14,45 +16,36 @@ import io.liquorice.config.core.logging.LogFactory;
 /**
  * Created by mthorpe on 6/10/15.
  */
-public class SinglePropertiesFileCache extends AbstractFileCache implements CacheLayer {
-    private static final Log LOG = LogFactory.getLog(SinglePropertiesFileCache.class);
+public class SingleJsonFileCache extends AbstractFileCache implements CacheLayer {
+    private static final Log LOG = LogFactory.getLog(SingleJsonFileCache.class);
 
     @Override
     public Iterator<Map.Entry<String, Object>> iterator() {
         try {
             getCacheReader().reset();
+            final Map gensonBackedMap = new Genson().deserialize(getCacheReader(), Map.class);
 
             return new Iterator<Map.Entry<String, Object>>() {
-                String bufferedLine;
+                Iterator gensonIterator = gensonBackedMap.keySet().iterator();
 
                 @Override
                 public boolean hasNext() {
-                    try {
-                        do {
-                            bufferedLine = getCacheReader().readLine();
-                        } while (bufferedLine != null && (bufferedLine.startsWith("#") || !bufferedLine.contains("=")));
-                        return bufferedLine != null;
-                    } catch (IOException e) {
-                        return false;
-                    }
+                    return gensonIterator.hasNext();
                 }
 
                 @Override
                 public Map.Entry<String, Object> next() throws NoSuchElementException {
-                    if (bufferedLine == null && !hasNext()) {
+                    if (!hasNext()) {
                         throw new NoSuchElementException();
                     }
 
-                    int idx = bufferedLine.indexOf('=');
-                    Map.Entry<String, Object> entry = new AbstractMap.SimpleEntry<String, Object>(
-                            bufferedLine.substring(0, idx), bufferedLine.substring(idx + 1));
-                    bufferedLine = null;
-                    return entry;
+                    String gensonKey = gensonIterator.next().toString();
+                    return new AbstractMap.SimpleEntry<>(gensonKey, gensonBackedMap.get(gensonKey));
                 }
 
                 @Override
                 public void remove() {
-                    // Unsupported
+                    gensonIterator.remove();
                 }
             };
         } catch (IOException e) {

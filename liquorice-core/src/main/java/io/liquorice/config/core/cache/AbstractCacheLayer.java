@@ -1,8 +1,9 @@
 package io.liquorice.config.core.cache;
 
-import io.liquorice.config.core.cache.exception.CacheInitializationException;
-
 import java.util.Iterator;
+import java.util.Map;
+
+import io.liquorice.config.core.cache.exception.CacheInitializationException;
 
 /**
  * Created by mthorpe on 6/10/15.
@@ -26,7 +27,7 @@ public abstract class AbstractCacheLayer implements CacheLayer {
     }
 
     @Override
-    public Iterator iterator() {
+    public Iterator<Map.Entry<String, Object>> iterator() {
         return new NullIterator();
     }
 }

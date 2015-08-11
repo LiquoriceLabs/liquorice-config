@@ -56,8 +56,6 @@ subprojects {
     }
 
     dependencies {
-        compile group: 'org.json', name: 'json', version: '20140107'
-
         testCompile group: 'org.testng', name: 'testng', version: '6.9.4'
         testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
 
