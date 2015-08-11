@@ -1,4 +1,4 @@
-package io.liquorice.config.server;
+package io.liquorice.config.service;
 
 import java.io.File;
 import java.util.Arrays;
@@ -61,7 +61,7 @@ public class LiquoriceService {
      * @return this
      */
     public LiquoriceService setDataDirectory(String envVar) {
-        dataDirectory = VariableUtilities.getFromEnv(envVar, "");
+        dataDirectory = VariableUtilities.getFromEnv(envVar, DEFAULT_DATA_DIRECTORY);
         return this;
     }
 
