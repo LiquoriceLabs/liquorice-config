@@ -1,10 +1,12 @@
 package io.liquorice.config.core.cache.memory;
 
 import java.nio.file.Path;
+import java.util.Iterator;
 import java.util.Map;
 
 import io.liquorice.config.core.cache.AbstractCacheLayer;
 import io.liquorice.config.core.cache.CacheLayer;
+import io.liquorice.config.core.cache.NullIterator;
 import io.liquorice.config.core.cache.exception.CacheClearingException;
 import io.liquorice.config.core.cache.exception.CacheInitializationException;
 import io.liquorice.config.core.cache.exception.CacheWarmingException;
@@ -42,6 +44,11 @@ public class BlackHoleCache extends AbstractCacheLayer implements CacheLayer {
     @Override
     public Object invalidate(String key) throws CacheInitializationException {
         return null;
+    }
+
+    @Override
+    public Iterator<Map.Entry<String, Object>> iterator() {
+        return new NullIterator();
     }
 
     @Override

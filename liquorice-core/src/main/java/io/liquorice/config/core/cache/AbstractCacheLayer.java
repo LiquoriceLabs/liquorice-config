@@ -25,9 +25,4 @@ public abstract class AbstractCacheLayer implements CacheLayer {
     public void setWriteThroughCache(CacheLayer writeThroughCache) {
         this.writeThroughCache = writeThroughCache;
     }
-
-    @Override
-    public Iterator<Map.Entry<String, Object>> iterator() {
-        return new NullIterator();
-    }
 }

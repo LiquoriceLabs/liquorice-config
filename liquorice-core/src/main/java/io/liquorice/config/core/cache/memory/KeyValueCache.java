@@ -86,27 +86,6 @@ public class KeyValueCache extends AbstractCacheLayer implements CacheLayer {
     }
 
     @Override
-    public Object put(String key, Object value) throws CacheInitializationException {
-        return storage.put(key, value);
-    }
-
-    @Override
-    public void putAll(Map<String, Object> elementMap) throws CacheInitializationException {
-        storage.putAll(elementMap);
-    }
-
-    @Override
-    public Object remove(String key) throws CacheInitializationException {
-        getWriteThroughCache().remove(key);
-        return invalidate(key);
-    }
-
-    @Override
-    public void warm(Path path, String encoding) throws CacheWarmingException {
-
-    }
-
-    @Override
     public Iterator<Map.Entry<String, Object>> iterator() {
         return new Iterator<Map.Entry<String, Object>>() {
             Iterator<Map.Entry<String, Object>> it = storage.entrySet().iterator();
@@ -130,5 +109,26 @@ public class KeyValueCache extends AbstractCacheLayer implements CacheLayer {
                 it.remove();
             }
         };
+    }
+
+    @Override
+    public Object put(String key, Object value) throws CacheInitializationException {
+        return storage.put(key, value);
+    }
+
+    @Override
+    public void putAll(Map<String, Object> elementMap) throws CacheInitializationException {
+        storage.putAll(elementMap);
+    }
+
+    @Override
+    public Object remove(String key) throws CacheInitializationException {
+        getWriteThroughCache().remove(key);
+        return invalidate(key);
+    }
+
+    @Override
+    public void warm(Path path, String encoding) throws CacheWarmingException {
+
     }
 }
