@@ -10,6 +10,13 @@ def versionTimeDateFormat = new SimpleDateFormat("yyyyMMdd")
 versionTimeDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
 def versionTime = versionTimeDateFormat.format(date)
 
+apply plugin: 'base'
+apply plugin: 'java'
+
+clean.doFirst {
+    delete "${projectDir}/build"
+}
+
 subprojects {
     apply plugin: 'checkstyle'
     apply plugin: 'findbugs'
@@ -148,4 +155,16 @@ subprojects {
             xml.enabled = true
         }
     }
+}
+
+task generateAggregateDocs(type: Javadoc) {
+    source subprojects.collect {project -> project.sourceSets.main.allJava }
+    classpath = files(subprojects.collect {project -> project.sourceSets.main.compileClasspath})
+    destinationDir = new File("${projectDir}/build/docs/javadocs")
+}
+
+task archiveDocs(type: Zip) {
+    baseName 'docs'
+    from 'build/docs'
+    mustRunAfter generateAggregateDocs
 }
