@@ -10,6 +10,7 @@ import io.liquorice.config.core.cache.file.SinglePropertiesFileCache;
 import io.liquorice.config.core.cache.memory.BlackHoleCache;
 import io.liquorice.config.core.cache.memory.KeyValueCache;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -45,7 +46,7 @@ public class MultiLevelCacheIntegrationTest {
         // Setup real caches
         simpleFileCache = new SinglePropertiesFileCache();
         simpleFileCache.setWriteThroughCache(mockTerminalCache);
-        ((SinglePropertiesFileCache) simpleFileCache).warm(propertiesPath, "UTF-8");
+        simpleFileCache.warm(propertiesPath, "UTF-8");
         keyValueFlatCache = new KeyValueCache();
         keyValueFlatCache.setWriteThroughCache(mockMiddleCache);
 

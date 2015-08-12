@@ -5,9 +5,23 @@
 
 <module name="Checker">
     <property name="charset" value="UTF-8"/>
-    <property name="severity" value="warning"/>
+    <property name="severity" value="error"/>
 
     <module name="TreeWalker">
         <property name="fileExtensions" value="java"/>
+
+        <module name="AvoidStarImport"/>
+        <module name="ConstantName"/>
+        <module name="JavadocMethod">
+            <property name="allowedAnnotations" value="AfterTest, BeforeTest, DataProvider, Test"/>
+            <property name="scope" value="protected"/>
+        </module>
+        <module name="JavadocType">
+            <property name="scope" value="protected"/>
+        </module>
+        <module name="MagicNumberCheck"/>
+        <module name="MethodLength">
+            <property name="max" value="60"/>
+        </module>
     </module>
 </module>

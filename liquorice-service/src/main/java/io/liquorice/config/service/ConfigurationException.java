@@ -1,16 +1,16 @@
-package io.liquorice.config.core.cache.exception;
+package io.liquorice.config.service;
 
 /**
- * Thrown to indicate a {@link io.liquorice.config.core.cache.CacheLayer} could not be warmed.
+ * Thrown to indicate a general configuration exception.
  */
-public class CacheWarmingException extends IllegalArgumentException {
+public class ConfigurationException extends IllegalArgumentException {
     /**
-     * Constructs an <code>CacheWarmingException</code> with the specified detail message.
+     * Constructs an <code>ConfigurationException</code> with the specified detail message.
      *
      * @param message
      *            the detail message.
      */
-    public CacheWarmingException(final String message) {
+    public ConfigurationException(final String message) {
         super(message);
     }
 
@@ -27,7 +27,7 @@ public class CacheWarmingException extends IllegalArgumentException {
      *            the cause (which is saved for later retrieval by the {@link Throwable#getCause()} method). (A
      *            <tt>null</tt> value is permitted, and indicates that the cause is nonexistent or unknown.)
      */
-    public CacheWarmingException(final String message, final Throwable cause) {
+    public ConfigurationException(final String message, final Throwable cause) {
         super(message, cause);
     }
 }

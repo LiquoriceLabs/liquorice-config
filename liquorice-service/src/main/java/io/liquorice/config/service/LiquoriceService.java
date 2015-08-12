@@ -3,7 +3,6 @@ package io.liquorice.config.service;
 import java.io.File;
 import java.util.Arrays;
 
-import io.liquorice.config.core.utils.ConfigurationException;
 import io.liquorice.config.core.utils.VariableUtilities;
 
 /**
@@ -45,7 +44,8 @@ public class LiquoriceService {
      *
      * @param args
      *            Arguments passed to the service
-     * @throws
+     * @throws ConfigurationException
+     *             if the supplied configuration is invalid
      */
     public void run(String[] args) throws ConfigurationException {
         if (!checkConfig()) {

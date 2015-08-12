@@ -10,6 +10,12 @@ import java.util.logging.Logger;
 public class Log {
     private Logger logger;
 
+    /**
+     * CTOR to bind a {@link java.util.logging.Logger} to this Log
+     * 
+     * @param logger
+     *            The {@link java.util.logging.Logger} to write messages using
+     */
     public Log(Logger logger) {
         this.logger = logger;
     }

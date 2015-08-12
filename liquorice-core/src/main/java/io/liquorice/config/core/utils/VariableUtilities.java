@@ -1,7 +1,7 @@
 package io.liquorice.config.core.utils;
 
 /**
- * Created by mthorpe on 4/26/15. </p> Convenience methods for manipulating property values
+ * Convenience methods for manipulating property values
  */
 public final class VariableUtilities {
     /**

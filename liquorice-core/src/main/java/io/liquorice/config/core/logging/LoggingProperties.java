@@ -1,7 +1,7 @@
 package io.liquorice.config.core.logging;
 
 /**
- * Created by mthorpe on 6/16/15.
+ * Multi-purpose global properties
  */
 public class LoggingProperties {
     public static final String LOGGER_FILE = "logger.file";

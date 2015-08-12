@@ -22,7 +22,7 @@ subprojects {
     sourceCompatibility = 1.7
     def vendor = 'Liquorice.io'
 
-    group = 'io.liquorice'
+    group = 'io.liquorice.config'
     version = "0.1.${versionTime}"
 
     jar.doFirst {
@@ -108,6 +108,7 @@ subprojects {
     checkstyle {
         ignoreFailures = false
         sourceSets = [ sourceSets.main, sourceSets.test, sourceSets.integrationTest ]
+        toolVersion = '6.7'
     }
 
     findbugsMain {

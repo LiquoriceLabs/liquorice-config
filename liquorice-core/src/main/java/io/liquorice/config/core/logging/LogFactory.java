@@ -9,6 +9,9 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Convenience factory for creating {@link io.liquorice.config.core.logging.Log}s.
+ */
 public final class LogFactory {
     private static final String FACTORY_NAME = "liquorice-logging-factory";
     private static final String FACTORY_PROPERTIES = "liquorice-logging.properties";
@@ -28,6 +31,7 @@ public final class LogFactory {
      *
      * @param clazz
      *            The class to log messages on behalf of
+     * @return An initialized {@link Log} backed by a {@link java.util.logging.Logger}
      */
     public static synchronized Log getLog(Class clazz) {
         if (properties == null) {
@@ -70,7 +74,13 @@ public final class LogFactory {
         }
     }
 
-    private static Formatter getFormatter() {
+    /**
+     * Get a copy of the {@link java.util.logging.Formatter} used by {@link io.liquorice.config.core.logging.Log}s
+     * created via this factory
+     *
+     * @return A new {@link java.util.logging.Formatter}
+     */
+    public static Formatter getFormatter() {
         return new SingleLineFormatter();
     }
 

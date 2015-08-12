@@ -11,12 +11,12 @@ import java.util.Map;
 
 import io.liquorice.config.core.cache.AbstractCacheLayer;
 import io.liquorice.config.core.cache.CacheLayer;
-import io.liquorice.config.core.cache.exception.CacheClearingException;
 import io.liquorice.config.core.cache.exception.CacheInitializationException;
 import io.liquorice.config.core.cache.exception.CacheWarmingException;
 
 /**
- * Created by mthorpe on 8/11/15.
+ * Shared implementation of any {@link io.liquorice.config.core.cache.CacheLayer} backed by files on a standard
+ * filesystem.
  */
 public abstract class AbstractFileCache extends AbstractCacheLayer implements CacheLayer {
     private static final int MARK_SIZE_SHIFTER = 24;
@@ -25,11 +25,17 @@ public abstract class AbstractFileCache extends AbstractCacheLayer implements Ca
     private InputStream inputStream;
     private String encoding;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void clear() throws CacheClearingException {
+    public void clear() {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean getBoolean(String key, boolean defaultValue) throws CacheInitializationException {
         String property = findPropertyValueInFile(key);
@@ -40,6 +46,9 @@ public abstract class AbstractFileCache extends AbstractCacheLayer implements Ca
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double getDouble(String key, double defaultValue) throws CacheInitializationException {
         try {
@@ -50,6 +59,9 @@ public abstract class AbstractFileCache extends AbstractCacheLayer implements Ca
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getInt(String key, int defaultValue) throws CacheInitializationException {
         try {
@@ -60,6 +72,9 @@ public abstract class AbstractFileCache extends AbstractCacheLayer implements Ca
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getString(String key, String defaultValue) throws CacheInitializationException {
         String property = findPropertyValueInFile(key);
@@ -70,43 +85,70 @@ public abstract class AbstractFileCache extends AbstractCacheLayer implements Ca
         }
     }
 
-    @Override
-    public Object invalidate(String key) throws CacheInitializationException {
-        return null;
-    }
-
+    /**
+     * Flushes all data stored in this cache to its write-through {@link io.liquorice.config.core.cache.CacheLayer} and
+     * commits any changes to its file-based storage system
+     *
+     * @throws CacheInitializationException
+     *             if the {@link io.liquorice.config.core.cache.CacheLayer} was not initialized properly
+     */
     @Override
     public void flush() throws CacheInitializationException {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Object invalidate(String key) throws CacheInitializationException {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object put(String key, Object value) throws CacheInitializationException {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void putAll(Map<String, Object> elementMap) throws CacheInitializationException {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object remove(String key) throws CacheInitializationException {
         return getWriteThroughCache().remove(key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void warm(Path path, String encoding) throws CacheWarmingException {
         InputStream inputStream;
 
         try {
             inputStream = new FileInputStream(path.toFile());
-            warm(inputStream, encoding);
-        } catch (IOException e1) {
-            throw new CacheWarmingException("Failed to warm cache", e1);
+        } catch (IOException e) {
+            throw new CacheWarmingException("Failed to warm cache", e);
         }
+
+        warm(inputStream, encoding);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void warm(InputStream inputStream, String encoding) throws CacheWarmingException {
         try {
             this.inputStream = inputStream;
@@ -117,6 +159,11 @@ public abstract class AbstractFileCache extends AbstractCacheLayer implements Ca
         }
     }
 
+    /**
+     * Get the {@link java.io.BufferedReader} initialized with the preset encoding
+     *
+     * @return A {@link java.io.BufferedReader} open to the last read position
+     */
     protected BufferedReader getCacheReader() {
         return cacheReader;
     }
@@ -128,13 +175,16 @@ public abstract class AbstractFileCache extends AbstractCacheLayer implements Ca
     }
 
     private String findPropertyValueInFile(String propertyName) throws CacheInitializationException {
-        Iterator<Map.Entry<String, Object>> it = this.iterator();
+        Iterator it = this.iterator();
         while (it.hasNext()) {
-            Map.Entry<String, Object> entry = it.next();
+            Object object = it.next();
             it.remove();
 
-            if (entry.getKey().equals(propertyName)) {
-                return entry.getValue().toString();
+            if (object instanceof Map.Entry) {
+                Map.Entry entry = (Map.Entry) object;
+                if (entry.getKey().toString().equals(propertyName)) {
+                    return entry.getValue().toString();
+                }
             }
         }
         return null;

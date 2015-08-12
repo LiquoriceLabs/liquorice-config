@@ -6,7 +6,12 @@ import java.util.logging.LogRecord;
 
 /**
  * SingleLineFormatter formats the LogRecord as follows:
- * date   level   localized message with parameters
+ *
+ * <pre>
+ * {@code
+ * date [level] message
+ * }
+ * </pre>
  */
 public class SingleLineFormatter extends Formatter {
     /**
@@ -19,8 +24,9 @@ public class SingleLineFormatter extends Formatter {
     /**
      * Format a LogRecord to the specified format above
      *
-     * @param	record
-     * @return	The constructed log message
+     * @param record
+     *            The logging request
+     * @return The constructed log message
      */
     public String format(LogRecord record) {
         Date date = new Date(record.getMillis());

@@ -1,16 +1,27 @@
 package io.liquorice.config.core.cache;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import io.liquorice.config.core.cache.exception.CacheInitializationException;
 
 /**
- * Created by mthorpe on 6/10/15.
+ * Shared implementation of any {@link io.liquorice.config.core.cache.CacheLayer}
+ *
+ * <p>
+ * Although these methods can be overridden, they provide a basic contract for multi-tiered caching systems
  */
 public abstract class AbstractCacheLayer implements CacheLayer {
     private CacheLayer writeThroughCache;
 
+    /**
+     * Gets the write-through {@link io.liquorice.config.core.cache.CacheLayer}.
+     *
+     * <p>
+     * Write-through caches are explained in more detail in the
+     * {@link io.liquorice.config.core.cache.CacheLayer#getWriteThroughCache} method.
+     *
+     * @return The {@link CacheLayer} one level down from this one
+     * @throws CacheInitializationException
+     *             if the {@link io.liquorice.config.core.cache.CacheLayer} was not initialized properly
+     */
     @Override
     public CacheLayer getWriteThroughCache() {
         if (writeThroughCache == null) {
@@ -21,6 +32,16 @@ public abstract class AbstractCacheLayer implements CacheLayer {
         }
     }
 
+    /**
+     * Sets the write-through {@link io.liquorice.config.core.cache.CacheLayer}.
+     *
+     * <p>
+     * Write-through caches are explained in more detail in the
+     * {@link io.liquorice.config.core.cache.CacheLayer#getWriteThroughCache} method.
+     *
+     * @param writeThroughCache
+     *            The write-through {@link io.liquorice.config.core.cache.CacheLayer} to forward requests to
+     */
     @Override
     public void setWriteThroughCache(CacheLayer writeThroughCache) {
         this.writeThroughCache = writeThroughCache;
