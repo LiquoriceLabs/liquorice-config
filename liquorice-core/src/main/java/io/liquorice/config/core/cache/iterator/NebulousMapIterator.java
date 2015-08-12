@@ -1,4 +1,4 @@
-package io.liquorice.config.core.cache.file.iterator;
+package io.liquorice.config.core.cache.iterator;
 
 import java.util.AbstractMap;
 import java.util.Iterator;

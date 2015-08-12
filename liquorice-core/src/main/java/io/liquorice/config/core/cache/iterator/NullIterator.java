@@ -1,11 +1,11 @@
-package io.liquorice.config.core.cache;
+package io.liquorice.config.core.cache.iterator;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
- * End of the line iterator. A {@link io.liquorice.config.core.cache.NullIterator} never contains entries
+ * End of the line iterator. A {@link NullIterator} never contains entries
  */
 public class NullIterator implements Iterator<Map.Entry<String, Object>> {
     /**

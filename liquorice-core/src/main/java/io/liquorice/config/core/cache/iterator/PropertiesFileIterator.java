@@ -1,4 +1,4 @@
-package io.liquorice.config.core.cache.file.iterator;
+package io.liquorice.config.core.cache.iterator;
 
 import java.io.BufferedReader;
 import java.io.IOException;

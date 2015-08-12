@@ -7,8 +7,8 @@ import java.util.Map;
 import com.owlike.genson.Genson;
 
 import io.liquorice.config.core.cache.CacheLayer;
-import io.liquorice.config.core.cache.NullIterator;
-import io.liquorice.config.core.cache.file.iterator.NebulousMapIterator;
+import io.liquorice.config.core.cache.iterator.NullIterator;
+import io.liquorice.config.core.cache.iterator.NebulousMapIterator;
 import io.liquorice.config.core.logging.Log;
 import io.liquorice.config.core.logging.LogFactory;
 

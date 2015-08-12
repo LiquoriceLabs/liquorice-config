@@ -7,7 +7,7 @@ import java.util.Map;
 
 import io.liquorice.config.core.cache.AbstractCacheLayer;
 import io.liquorice.config.core.cache.CacheLayer;
-import io.liquorice.config.core.cache.NullIterator;
+import io.liquorice.config.core.cache.iterator.NullIterator;
 import io.liquorice.config.core.cache.exception.CacheInitializationException;
 import io.liquorice.config.core.cache.exception.CacheWarmingException;
 
@@ -121,9 +121,9 @@ public class BlackHoleCache extends AbstractCacheLayer implements CacheLayer {
     }
 
     /**
-     * This method returns a {@link io.liquorice.config.core.cache.NullIterator}.
+     * This method returns a {@link io.liquorice.config.core.cache.iterator.NullIterator}.
      * 
-     * @return a new {@link io.liquorice.config.core.cache.NullIterator}
+     * @return a new {@link io.liquorice.config.core.cache.iterator.NullIterator}
      */
     @Override
     public Iterator<Map.Entry<String, Object>> iterator() {

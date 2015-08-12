@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import io.liquorice.config.core.cache.CacheLayer;
-import io.liquorice.config.core.cache.NullIterator;
-import io.liquorice.config.core.cache.file.iterator.PropertiesFileIterator;
+import io.liquorice.config.core.cache.iterator.NullIterator;
+import io.liquorice.config.core.cache.iterator.PropertiesFileIterator;
 import io.liquorice.config.core.logging.Log;
 import io.liquorice.config.core.logging.LogFactory;
 
