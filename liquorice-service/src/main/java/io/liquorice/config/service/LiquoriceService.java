@@ -3,6 +3,8 @@ package io.liquorice.config.service;
 import java.io.File;
 import java.util.Arrays;
 
+import io.liquorice.config.core.logging.Log;
+import io.liquorice.config.core.logging.LogFactory;
 import io.liquorice.config.core.utils.VariableUtilities;
 
 /**
@@ -13,6 +15,8 @@ import io.liquorice.config.core.utils.VariableUtilities;
 public class LiquoriceService {
     public static final String ENV_DATA_DIRECTORY = "LIQUORICE_DATA";
     private static final String DEFAULT_DATA_DIRECTORY = "./data";
+    private static final Log LOG = LogFactory.getLog(LiquoriceService.class);
+
     private String dataDirectory = null;
 
     /**
@@ -26,8 +30,7 @@ public class LiquoriceService {
             new LiquoriceService().setDataDirectory(LiquoriceService.ENV_DATA_DIRECTORY).run(
                     Arrays.copyOf(args, args.length));
         } catch (ConfigurationException e) {
-            System.err.println("Unclean shutdown detected. Caused by: " + e.toString());
-            e.printStackTrace();
+            LOG.severe(e);
             System.exit(1);
         }
     }
@@ -73,7 +76,7 @@ public class LiquoriceService {
      * @return this
      */
     public LiquoriceService setDataDirectory(File path) {
-        this.dataDirectory = VariableUtilities.getOrSetDefault(path.getAbsolutePath(), "");
+        this.dataDirectory = VariableUtilities.getOrSetDefault(path.getAbsolutePath(), DEFAULT_DATA_DIRECTORY);
         return this;
     }
 }

@@ -1,0 +1,6 @@
+dependencies {
+    compile project(':liquorice-core')
+
+    // json
+    compile group: 'com.owlike', name: 'genson', version: '1.3'
+}

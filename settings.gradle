@@ -1,1 +1,1 @@
-include ':liquorice-core', 'liquorice-service'
+include ':liquorice-core', 'liquorice-cache', 'liquorice-service'
