@@ -3,8 +3,11 @@ package io.liquorice.config.cache;
 import io.liquorice.config.cache.file.SinglePropertiesFileCache;
 import io.liquorice.config.cache.memory.BlackHoleCache;
 import io.liquorice.config.cache.memory.KeyValueCache;
+import io.liquorice.config.exception.cache.CacheWarmingException;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -80,6 +83,15 @@ public class MultiLevelCacheIntegrationTest {
 
         // Verify mockTerminalCache.getString() was only called once
         verify(mockTerminalCache, times(1)).getString(anyString(), anyString());
+    }
+
+    @Test(expectedExceptions = CacheWarmingException.class)
+    public void testBadWarmingPath() throws Exception {
+        final Path mockPath = mock(Path.class);
+        when(mockPath.toFile()).thenThrow(new RuntimeException("Uh oh."));
+
+        simpleFileCache = new SinglePropertiesFileCache();
+        simpleFileCache.warm(mockPath, "UTF-8");
     }
 
     private void initTerminalMocks() {

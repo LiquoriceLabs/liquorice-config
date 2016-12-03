@@ -137,7 +137,7 @@ public abstract class AbstractFileCache extends AbstractCacheLayer implements Ca
 
         try {
             inputStream = new FileInputStream(path.toFile());
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new CacheWarmingException("Failed to warm cache", e);
         }
 
@@ -153,7 +153,7 @@ public abstract class AbstractFileCache extends AbstractCacheLayer implements Ca
             this.inputStream = inputStream;
             this.encoding = encoding;
             initReader();
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new CacheWarmingException("Failed to warm cache", e);
         }
     }
