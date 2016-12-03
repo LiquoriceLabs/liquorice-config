@@ -1,1 +1,5 @@
-include ':liquorice-core', 'liquorice-cache', 'liquorice-service'
+include 'io.liquorice.config.api'
+include 'io.liquorice.config.cache'
+include 'io.liquorice.config.exceptions'
+include 'io.liquorice.config.utils'
+include 'io.liquorice.config.web'

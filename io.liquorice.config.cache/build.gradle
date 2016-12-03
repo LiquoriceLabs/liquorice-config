@@ -1,0 +1,8 @@
+dependencies {
+    compile project(':io.liquorice.config.api')
+    compile project(':io.liquorice.config.exceptions')
+    compile project(':io.liquorice.config.utils')
+
+    // json
+    compile group: 'com.owlike', name: 'genson', version: '1.3'
+}

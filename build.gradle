@@ -10,6 +10,9 @@ def versionTimeDateFormat = new SimpleDateFormat("yyyyMMdd")
 versionTimeDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
 def versionTime = versionTimeDateFormat.format(date)
 
+def majorVersion = 0
+def minorVersion = 1
+
 apply plugin: 'base'
 apply plugin: 'java'
 
@@ -32,7 +35,7 @@ subprojects {
     def vendor = 'Liquorice.io'
 
     group = 'io.liquorice.config'
-    version = "0.1.${versionTime}"
+    version = "${majorVersion}.${minorVersion}.${versionTime}"
 
     jar.doFirst {
         manifest {
@@ -66,7 +69,7 @@ subprojects {
 
     dependencies {
         testCompile group: 'org.testng', name: 'testng', version: '6.9.4'
-        testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
+        testCompile group: 'org.mockito', name: 'mockito-core', version: '2.2.26'
 
         integrationTestCompile sourceSets.main.output
         integrationTestCompile configurations.testCompile

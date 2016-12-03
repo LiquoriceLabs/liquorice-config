@@ -1,0 +1,6 @@
+dependencies {
+	compile project(':io.liquorice.config.api')
+	compile project(':io.liquorice.config.cache')
+	compile project(':io.liquorice.config.exceptions')
+    compile project(':io.liquorice.config.utils')
+}
