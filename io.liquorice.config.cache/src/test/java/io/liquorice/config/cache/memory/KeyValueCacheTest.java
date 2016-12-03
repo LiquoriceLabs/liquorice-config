@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMapOf;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -212,7 +212,7 @@ public class KeyValueCacheTest {
 
         // Verify flush
         keyValueCache.flush();
-        verify(mockCache, times(1)).putAll(anyMapOf(String.class, Object.class));
+        verify(mockCache, times(1)).putAll(anyMap());
     }
 
     @Test

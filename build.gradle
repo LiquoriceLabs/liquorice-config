@@ -118,6 +118,7 @@ subprojects {
 
     // Static Code Analysis
     checkstyle {
+        configFile = new File("${projectDir}/../config/checkstyle/checkstyle.xml")
         ignoreFailures = false
         sourceSets = [ sourceSets.main, sourceSets.test, sourceSets.integrationTest ]
         toolVersion = '6.7'
