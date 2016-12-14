@@ -1,6 +1,7 @@
 package io.liquorice.config.storage.memory;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import io.liquorice.config.api.formatter.ConfigFormatter;
 import io.liquorice.config.api.storage.AbstractConfigSpace;
 import io.liquorice.config.api.storage.ConfigSpace;
@@ -14,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * A {@link Map} backed implementation of a {@link ConfigSpace} where the contained items are unmodifiable after
  * creation
  */
-public class UnmodifiableMapConfigSpace extends AbstractConfigSpace implements ConfigSpace {
+public class ReadableMapConfigSpace extends AbstractConfigSpace implements ConfigSpace {
 
     private final Map<String, Object> map;
 
@@ -22,13 +23,13 @@ public class UnmodifiableMapConfigSpace extends AbstractConfigSpace implements C
      * CTOR
      *
      * @param configFormatter
-     *            the {@link ConfigFormatter} to use for retrieivng properties
+     *            the {@link ConfigFormatter} to use for retrieving properties
      * @param properties
-     *            the properties to seed this {@link UnmodifiableMapConfigSpace} with
+     *            the properties to seed this {@link ReadableMapConfigSpace} with
      */
-    public UnmodifiableMapConfigSpace(final ConfigFormatter configFormatter, final Map<String, Object> properties) {
+    public ReadableMapConfigSpace(final ConfigFormatter configFormatter, final Map<String, Object> properties) {
         super(configFormatter);
-        map = ImmutableMap.copyOf(properties);
+        map = Maps.newHashMap(properties);
     }
 
     /**
@@ -117,5 +118,16 @@ public class UnmodifiableMapConfigSpace extends AbstractConfigSpace implements C
     @Override
     public boolean hasValue(final String key) {
         return map.containsKey(key);
+    }
+
+    /**
+     * Get a reference to the map storing all of the contained properties
+     *
+     * NOTE: This is the actual backing store, not a copy. This method should only be used by extending classes
+     *
+     * @return the backing store
+     */
+    protected Map<String, Object> getBackingMap() {
+        return map;
     }
 }

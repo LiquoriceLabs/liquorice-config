@@ -1,6 +1,5 @@
 package io.liquorice.config.storage.memory;
 
-import com.beust.jcommander.internal.Lists;
 import com.google.common.collect.ImmutableMap;
 import io.liquorice.config.api.formatter.ConfigFormatter;
 import io.liquorice.config.exception.ConfigurationException;
@@ -11,37 +10,34 @@ import org.testng.annotations.Test;
 import java.util.List;
 import java.util.Map;
 
+import static io.liquorice.config.storage.memory.ConfigSpaceTestData.BOOL_KEY;
+import static io.liquorice.config.storage.memory.ConfigSpaceTestData.BOOL_VALUE;
+import static io.liquorice.config.storage.memory.ConfigSpaceTestData.COMPLEX_KEY;
+import static io.liquorice.config.storage.memory.ConfigSpaceTestData.COMPLEX_VALUE;
+import static io.liquorice.config.storage.memory.ConfigSpaceTestData.DEFAULT_BOOL_VALUE;
+import static io.liquorice.config.storage.memory.ConfigSpaceTestData.DEFAULT_COMPLEX_VALUE;
+import static io.liquorice.config.storage.memory.ConfigSpaceTestData.DEFAULT_DOUBLE_VALUE;
+import static io.liquorice.config.storage.memory.ConfigSpaceTestData.DEFAULT_INT_VALUE;
+import static io.liquorice.config.storage.memory.ConfigSpaceTestData.DEFAULT_LONG_VALUE;
+import static io.liquorice.config.storage.memory.ConfigSpaceTestData.DEFAULT_STRING_VALUE;
+import static io.liquorice.config.storage.memory.ConfigSpaceTestData.DOES_NOT_EXIST_KEY;
+import static io.liquorice.config.storage.memory.ConfigSpaceTestData.DOUBLE_KEY;
+import static io.liquorice.config.storage.memory.ConfigSpaceTestData.DOUBLE_VALUE;
+import static io.liquorice.config.storage.memory.ConfigSpaceTestData.INT_KEY;
+import static io.liquorice.config.storage.memory.ConfigSpaceTestData.INT_VALUE;
+import static io.liquorice.config.storage.memory.ConfigSpaceTestData.LONG_KEY;
+import static io.liquorice.config.storage.memory.ConfigSpaceTestData.LONG_VALUE;
+import static io.liquorice.config.storage.memory.ConfigSpaceTestData.STRING_KEY;
+import static io.liquorice.config.storage.memory.ConfigSpaceTestData.STRING_VALUE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 /**
  * Created by mthorpe on 12/11/16.
  */
-public class UnmodifiableMapConfigSpaceTest {
+public class ReadableMapConfigSpaceTest {
 
-    private static final String BOOL_KEY = "key.bool";
-    private static final String DOUBLE_KEY = "key.double";
-    private static final String INT_KEY = "key.int";
-    private static final String LONG_KEY = "key.long";
-    private static final String STRING_KEY = "key.string";
-    private static final String COMPLEX_KEY = "key.complex";
-    private static final String DOES_NOT_EXIST_KEY = "key.does.not.exist";
-
-    private static final boolean BOOL_VALUE = true;
-    private static final double DOUBLE_VALUE = 1.6;
-    private static final int INT_VALUE = 7;
-    private static final long LONG_VALUE = 17L;
-    private static final String STRING_VALUE = "test string";
-    private static final List<String> COMPLEX_VALUE = Lists.newArrayList(BOOL_KEY, DOUBLE_KEY);
-
-    private static final boolean DEFAULT_BOOL_VALUE = false;
-    private static final double DEFAULT_DOUBLE_VALUE = 2.4;
-    private static final int DEFAULT_INT_VALUE = 18;
-    private static final long DEFAULT_LONG_VALUE = 24L;
-    private static final String DEFAULT_STRING_VALUE = "default test value";
-    private static final List<String> DEFAULT_COMPLEX_VALUE = Lists.newArrayList(INT_KEY, LONG_KEY);
-
-    private UnmodifiableMapConfigSpace configSpace;
+    private ReadableMapConfigSpace configSpace;
 
     @BeforeTest
     public void setup() {
@@ -55,8 +51,8 @@ public class UnmodifiableMapConfigSpaceTest {
                 .put(COMPLEX_KEY, COMPLEX_VALUE) //
                 .build();
 
-        final ConfigFormatter mockConfigFormatter = new PassThroughConfigFormatter();
-        configSpace = new UnmodifiableMapConfigSpace(mockConfigFormatter, seedProperties);
+        final ConfigFormatter configFormatter = new PassThroughConfigFormatter();
+        configSpace = new ReadableMapConfigSpace(configFormatter, seedProperties);
     }
 
     @SuppressWarnings("unchecked")
