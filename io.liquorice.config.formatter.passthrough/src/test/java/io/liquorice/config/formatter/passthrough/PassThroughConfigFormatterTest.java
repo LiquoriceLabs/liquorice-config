@@ -28,7 +28,7 @@ public class PassThroughConfigFormatterTest {
     @Test
     public void testReadWriteSimple() {
         final Object written = configFormatter.write(TEST_STRING);
-        final String read = configFormatter.read(written, String.class);
+        final String read = configFormatter.read(written, String.class).get();
         assertEquals(read, TEST_STRING);
     }
 
@@ -36,7 +36,7 @@ public class PassThroughConfigFormatterTest {
     @Test
     public void testReadWriteComplex() {
         final Object written = configFormatter.write(TEST_LIST);
-        final List<String> read = (List<String>) configFormatter.read(written, List.class);
+        final List<String> read = (List<String>) configFormatter.read(written, List.class).get();
         assertEquals(read.size(), TEST_LIST.size());
         assertTrue(read.containsAll(TEST_LIST));
     }
@@ -45,7 +45,7 @@ public class PassThroughConfigFormatterTest {
     @Test(expectedExceptions = ClassCastException.class)
     public void testReadFailure() {
         final Object written = configFormatter.write(TEST_STRING);
-        final List<String> read = (List<String>) configFormatter.read(written, List.class);
+        final List<String> read = (List<String>) configFormatter.read(written, List.class).get();
         fail(String.format("Excepted ClassCastException when incorrectly casting '%s'", read));
     }
 }

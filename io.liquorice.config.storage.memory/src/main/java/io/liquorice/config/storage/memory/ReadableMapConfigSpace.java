@@ -38,7 +38,7 @@ public class ReadableMapConfigSpace extends AbstractConfigSpace implements Confi
     @Override
     public boolean getBooleanRequired(final String key) throws ConfigurationException {
         try {
-            return getConfigFormatter().read(getNonNullable(key), Boolean.class);
+            return getConfigFormatter().read(getNonNullable(key), Boolean.class).get();
         } catch (final Exception e) {
             throw new ConfigurationException(String.format("Failed to read property '%s'", key), e);
         }
@@ -56,7 +56,7 @@ public class ReadableMapConfigSpace extends AbstractConfigSpace implements Confi
     @Override
     public double getDoubleRequired(final String key) throws ConfigurationException {
         try {
-            return getConfigFormatter().read(getNonNullable(key), Double.class);
+            return getConfigFormatter().read(getNonNullable(key), Double.class).get();
         } catch (final Exception e) {
             throw new ConfigurationException(String.format("Failed to read property '%s'", key), e);
         }
@@ -68,7 +68,7 @@ public class ReadableMapConfigSpace extends AbstractConfigSpace implements Confi
     @Override
     public int getIntRequired(final String key) throws ConfigurationException {
         try {
-            return getConfigFormatter().read(getNonNullable(key), Integer.class);
+            return getConfigFormatter().read(getNonNullable(key), Integer.class).get();
         } catch (final Exception e) {
             throw new ConfigurationException(String.format("Failed to read property '%s'", key), e);
         }
@@ -80,7 +80,7 @@ public class ReadableMapConfigSpace extends AbstractConfigSpace implements Confi
     @Override
     public long getLongRequired(final String key) throws ConfigurationException {
         try {
-            return getConfigFormatter().read(getNonNullable(key), Long.class);
+            return getConfigFormatter().read(getNonNullable(key), Long.class).get();
         } catch (final Exception e) {
             throw new ConfigurationException(String.format("Failed to read property '%s'", key), e);
         }
@@ -94,7 +94,7 @@ public class ReadableMapConfigSpace extends AbstractConfigSpace implements Confi
     @Override
     public <T> T getObjectRequired(final String key, final Class<T> clazz) throws ConfigurationException {
         try {
-            return getConfigFormatter().read(getNonNullable(key), clazz);
+            return getConfigFormatter().read(getNonNullable(key), clazz).get();
         } catch (final Exception e) {
             throw new ConfigurationException(String.format("Failed to read property '%s'", key), e);
         }
@@ -106,7 +106,7 @@ public class ReadableMapConfigSpace extends AbstractConfigSpace implements Confi
     @Override
     public String getStringRequired(final String key) throws ConfigurationException {
         try {
-            return getConfigFormatter().read(getNonNullable(key), String.class);
+            return getConfigFormatter().read(getNonNullable(key), String.class).get();
         } catch (final Exception e) {
             throw new ConfigurationException(String.format("Failed to read property '%s'", key), e);
         }

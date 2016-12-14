@@ -2,6 +2,8 @@ package io.liquorice.config.api.formatter;
 
 import io.liquorice.config.api.storage.ConfigSpace;
 
+import java.util.Optional;
+
 /**
  * A pluggable interface for reading and writing non-basic entities to a {@link ConfigSpace}
  */
@@ -16,18 +18,17 @@ public interface ConfigFormatter {
      *            the type to format the value as
      * @param <T>
      *            type param
-     * @return The original value, interpreted as type {@link T}
+     * @return An optional containing the original value, interpreted as type {@link T} if the conversion was
+     *         successful, or an {@link Optional#empty()} otherwise
      */
-    <T> T read(final Object value, Class<T> valueType);
+    <T> Optional<T> read(final Object value, Class<T> valueType);
 
     /**
      * Reformat a value
      *
      * @param value
      *            the object to convert
-     * @param <T>
-     *            the type of the object to contain
      * @return A formatted view of $value
      */
-    <T> Object write(final Object value);
+    Object write(final Object value);
 }
