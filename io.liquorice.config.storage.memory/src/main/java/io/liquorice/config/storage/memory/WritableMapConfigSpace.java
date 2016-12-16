@@ -1,9 +1,12 @@
 package io.liquorice.config.storage.memory;
 
+import com.google.common.base.Strings;
 import io.liquorice.config.api.formatter.ConfigFormatter;
 import io.liquorice.config.api.storage.WritableConfigSpace;
 
 import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A {@link Map} backed implementation of a {@link WritableConfigSpace} where the contained items can be modified
@@ -19,7 +22,7 @@ public class WritableMapConfigSpace extends ReadableMapConfigSpace implements Wr
      *            the properties to seed this {@link WritableMapConfigSpace} with
      */
     public WritableMapConfigSpace(final ConfigFormatter configFormatter, final Map<String, Object> properties) {
-        super(configFormatter, properties);
+        super(checkNotNull(configFormatter), checkNotNull(properties));
     }
 
     /**
@@ -59,7 +62,7 @@ public class WritableMapConfigSpace extends ReadableMapConfigSpace implements Wr
      */
     @Override
     public void setObject(final String key, final Object value) {
-        getBackingMap().put(key, getConfigFormatter().write(value));
+        getBackingMap().put(checkNotNull(Strings.emptyToNull(key)), getConfigFormatter().write(checkNotNull(value)));
     }
 
     /**

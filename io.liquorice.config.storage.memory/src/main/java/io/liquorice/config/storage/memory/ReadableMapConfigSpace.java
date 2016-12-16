@@ -1,6 +1,6 @@
 package io.liquorice.config.storage.memory;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import io.liquorice.config.api.formatter.ConfigFormatter;
 import io.liquorice.config.api.storage.AbstractConfigSpace;
@@ -28,8 +28,8 @@ public class ReadableMapConfigSpace extends AbstractConfigSpace implements Confi
      *            the properties to seed this {@link ReadableMapConfigSpace} with
      */
     public ReadableMapConfigSpace(final ConfigFormatter configFormatter, final Map<String, Object> properties) {
-        super(configFormatter);
-        map = Maps.newHashMap(properties);
+        super(checkNotNull(configFormatter));
+        map = Maps.newHashMap(checkNotNull(properties));
     }
 
     /**
@@ -37,17 +37,7 @@ public class ReadableMapConfigSpace extends AbstractConfigSpace implements Confi
      */
     @Override
     public boolean getBooleanRequired(final String key) throws ConfigurationException {
-        try {
-            return getConfigFormatter().read(getNonNullable(key), Boolean.class).get();
-        } catch (final Exception e) {
-            throw new ConfigurationException(String.format("Failed to read property '%s'", key), e);
-        }
-    }
-
-    private Object getNonNullable(final String key) {
-        final Object value = map.get(key);
-        checkNotNull(value);
-        return value;
+        return getObjectRequired(key, Boolean.class);
     }
 
     /**
@@ -55,11 +45,7 @@ public class ReadableMapConfigSpace extends AbstractConfigSpace implements Confi
      */
     @Override
     public double getDoubleRequired(final String key) throws ConfigurationException {
-        try {
-            return getConfigFormatter().read(getNonNullable(key), Double.class).get();
-        } catch (final Exception e) {
-            throw new ConfigurationException(String.format("Failed to read property '%s'", key), e);
-        }
+        return getObjectRequired(key, Double.class);
     }
 
     /**
@@ -67,11 +53,7 @@ public class ReadableMapConfigSpace extends AbstractConfigSpace implements Confi
      */
     @Override
     public int getIntRequired(final String key) throws ConfigurationException {
-        try {
-            return getConfigFormatter().read(getNonNullable(key), Integer.class).get();
-        } catch (final Exception e) {
-            throw new ConfigurationException(String.format("Failed to read property '%s'", key), e);
-        }
+        return getObjectRequired(key, Integer.class);
     }
 
     /**
@@ -79,11 +61,7 @@ public class ReadableMapConfigSpace extends AbstractConfigSpace implements Confi
      */
     @Override
     public long getLongRequired(final String key) throws ConfigurationException {
-        try {
-            return getConfigFormatter().read(getNonNullable(key), Long.class).get();
-        } catch (final Exception e) {
-            throw new ConfigurationException(String.format("Failed to read property '%s'", key), e);
-        }
+        return getObjectRequired(key, Long.class);
     }
 
     /**
@@ -105,11 +83,7 @@ public class ReadableMapConfigSpace extends AbstractConfigSpace implements Confi
      */
     @Override
     public String getStringRequired(final String key) throws ConfigurationException {
-        try {
-            return getConfigFormatter().read(getNonNullable(key), String.class).get();
-        } catch (final Exception e) {
-            throw new ConfigurationException(String.format("Failed to read property '%s'", key), e);
-        }
+        return getObjectRequired(key, String.class);
     }
 
     /**
@@ -117,7 +91,7 @@ public class ReadableMapConfigSpace extends AbstractConfigSpace implements Confi
      */
     @Override
     public boolean hasValue(final String key) {
-        return map.containsKey(key);
+        return map.containsKey(checkNotNull(Strings.emptyToNull(key)));
     }
 
     /**
@@ -129,5 +103,12 @@ public class ReadableMapConfigSpace extends AbstractConfigSpace implements Confi
      */
     protected Map<String, Object> getBackingMap() {
         return map;
+    }
+
+
+    private Object getNonNullable(final String key) {
+        final Object value = map.get(checkNotNull(Strings.emptyToNull(key)));
+        checkNotNull(value);
+        return value;
     }
 }
