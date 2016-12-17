@@ -28,6 +28,7 @@ import static io.liquorice.config.test.support.ConfigSpaceTestData.UPDATED_INT_V
 import static io.liquorice.config.test.support.ConfigSpaceTestData.UPDATED_LONG_VALUE;
 import static io.liquorice.config.test.support.ConfigSpaceTestData.UPDATED_STRING_VALUE;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -82,4 +83,16 @@ public class WritableMapConfigSpaceTest {
         assertEquals(actualComplex.size(), UPDATED_COMPLEX_VALUE.size());
         assertTrue(actualComplex.containsAll(UPDATED_COMPLEX_VALUE));
     }
+
+    @Test
+    public void testRemoveProperty() {
+        configSpace.remove(BOOL_KEY);
+
+        assertFalse(configSpace.hasValue(BOOL_KEY));
+        assertEquals(configSpace.getDoubleRequired(DOUBLE_KEY), DOUBLE_VALUE);
+        assertEquals(configSpace.getIntRequired(INT_KEY), INT_VALUE);
+        assertEquals(configSpace.getLongRequired(LONG_KEY), LONG_VALUE);
+        assertEquals(configSpace.getStringRequired(STRING_KEY), STRING_VALUE);
+    }
+
 }

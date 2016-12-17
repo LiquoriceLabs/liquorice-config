@@ -1,6 +1,7 @@
 package io.liquorice.config.storage.file.properties;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Strings;
 import io.liquorice.config.api.formatter.ConfigFormatter;
 import io.liquorice.config.api.storage.WritableConfigSpace;
 import io.liquorice.config.exception.ConfigurationException;
@@ -30,6 +31,17 @@ public class WritablePropertiesFileConfigSpace extends ReadablePropertiesFileCon
         super(builder.delegateBuilder.build());
         this.fileChannel = builder.fileChannel;
         this.fileChannelWriterFunction = builder.fileChannelWriterFunction;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void remove(final String key) {
+        checkNotNull(Strings.emptyToNull(key));
+
+        getBackingProperties().remove(key);
+        updateOnDiskStore();
     }
 
     /**
@@ -77,10 +89,17 @@ public class WritablePropertiesFileConfigSpace extends ReadablePropertiesFileCon
      */
     @Override
     public void setObject(final String key, final Object value) {
+        checkNotNull(Strings.emptyToNull(key));
+        checkNotNull(value, "Null value. Call ConfigSpace#remove to instead.");
+
         // Update the cached copy of the property
-        getBackingProperties().setProperty(checkNotNull(key), getConfigFormatter().write(checkNotNull(value)).toString());
+        getBackingProperties().setProperty(checkNotNull(key), getConfigFormatter().write(value).toString());
 
         // Update the on-disk copy of the property
+        updateOnDiskStore();
+    }
+
+    private void updateOnDiskStore() {
         try {
             try (final Writer writer = fileChannelWriterFunction.apply(fileChannel)) {
                 getBackingProperties().store(writer, null);

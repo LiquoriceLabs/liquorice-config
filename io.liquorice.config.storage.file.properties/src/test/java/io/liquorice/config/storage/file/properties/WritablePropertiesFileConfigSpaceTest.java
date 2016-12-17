@@ -33,6 +33,7 @@ import static io.liquorice.config.test.support.ConfigSpaceTestData.UPDATED_LONG_
 import static io.liquorice.config.test.support.ConfigSpaceTestData.UPDATED_STRING_VALUE;
 import static org.mockito.Mockito.mock;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 
 /**
  * Created by mthorpe on 12/13/16.
@@ -176,5 +177,26 @@ public class WritablePropertiesFileConfigSpaceTest {
         assertEquals(Integer.parseInt(properties.getProperty(INT_KEY)), INT_VALUE);
         assertEquals(Long.parseLong(properties.getProperty(LONG_KEY)), LONG_VALUE);
         assertEquals(properties.getProperty(STRING_KEY), UPDATED_STRING_VALUE);
+    }
+
+    @Test
+    public void testRemoveProperty() throws Exception {
+        // Setup mocks
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final WritablePropertiesFileConfigSpace configSpace = createConfigSpace(baos);
+
+        // Do the thing
+        configSpace.remove(BOOL_KEY);
+
+        // Verify the cache properties were updated
+        assertFalse(configSpace.hasValue(BOOL_KEY));
+
+        final Properties properties = new Properties();
+        properties.load(new ByteArrayInputStream(baos.toByteArray()));
+        assertFalse(properties.containsKey(BOOL_KEY));
+        assertEquals(Double.parseDouble(properties.getProperty(DOUBLE_KEY)), DOUBLE_VALUE);
+        assertEquals(Integer.parseInt(properties.getProperty(INT_KEY)), INT_VALUE);
+        assertEquals(Long.parseLong(properties.getProperty(LONG_KEY)), LONG_VALUE);
+        assertEquals(properties.getProperty(STRING_KEY), STRING_VALUE);
     }
 }

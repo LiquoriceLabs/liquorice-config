@@ -6,6 +6,13 @@ package io.liquorice.config.api.storage;
 public interface WritableConfigSpace extends ConfigSpace {
 
     /**
+     * Remove the value associated with $key
+     *
+     * @param key the key
+     */
+    void remove(final String key);
+
+    /**
      * Associate the $value with the $key
      *
      * @param key

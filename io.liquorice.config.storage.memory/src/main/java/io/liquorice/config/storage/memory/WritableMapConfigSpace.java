@@ -14,6 +14,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class WritableMapConfigSpace extends ReadableMapConfigSpace implements WritableConfigSpace {
 
     /**
+     * {@inheritDoc}
+     */
+    public void remove(final String key) {
+        checkNotNull(Strings.emptyToNull(key));
+
+        getBackingMap().remove(key);
+    }
+
+    /**
      * CTOR
      *
      * @param configFormatter
@@ -62,7 +71,10 @@ public class WritableMapConfigSpace extends ReadableMapConfigSpace implements Wr
      */
     @Override
     public void setObject(final String key, final Object value) {
-        getBackingMap().put(checkNotNull(Strings.emptyToNull(key)), getConfigFormatter().write(checkNotNull(value)));
+        checkNotNull(Strings.emptyToNull(key));
+        checkNotNull(value, "Null value. Call ConfigSpace#remove to instead.");
+
+        getBackingMap().put(key, getConfigFormatter().write(value));
     }
 
     /**
