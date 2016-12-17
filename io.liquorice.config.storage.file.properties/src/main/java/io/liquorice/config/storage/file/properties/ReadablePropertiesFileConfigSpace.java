@@ -17,7 +17,7 @@ import java.util.function.Function;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * A {@link Properties} backed implementation of a {@link ConfigSpace} where the contained items are unmodifiable after
+ * A FasterXML/jackson-backed implementation of a {@link ConfigSpace} where the contained items are unmodifiable after
  * creation
  */
 public class ReadablePropertiesFileConfigSpace extends AbstractConfigSpace implements ConfigSpace {
@@ -63,7 +63,7 @@ public class ReadablePropertiesFileConfigSpace extends AbstractConfigSpace imple
      */
     @Override
     public boolean getBooleanRequired(final String key) throws ConfigurationException {
-        return Boolean.parseBoolean(getObjectRequired(key, String.class));
+        return Boolean.parseBoolean(getStringRequired(key));
     }
 
     /**
@@ -72,7 +72,7 @@ public class ReadablePropertiesFileConfigSpace extends AbstractConfigSpace imple
     @Override
     public double getDoubleRequired(final String key) throws ConfigurationException {
         try {
-            return Double.parseDouble(getObjectRequired(key, String.class));
+            return Double.parseDouble(getStringRequired(key));
         } catch (final NumberFormatException e) {
             throw new ConfigurationException("Failed to read property '%s'", e);
         }
@@ -84,7 +84,7 @@ public class ReadablePropertiesFileConfigSpace extends AbstractConfigSpace imple
     @Override
     public int getIntRequired(final String key) throws ConfigurationException {
         try {
-            return Integer.parseInt(getObjectRequired(key, String.class));
+            return Integer.parseInt(getStringRequired(key));
         } catch (final NumberFormatException e) {
             throw new ConfigurationException("Failed to read property '%s'", e);
         }
@@ -96,7 +96,7 @@ public class ReadablePropertiesFileConfigSpace extends AbstractConfigSpace imple
     @Override
     public long getLongRequired(final String key) throws ConfigurationException {
         try {
-            return Long.parseLong(getObjectRequired(key, String.class));
+            return Long.parseLong(getStringRequired(key));
         } catch (final NumberFormatException e) {
             throw new ConfigurationException("Failed to read property '%s'", e);
         }
@@ -131,7 +131,7 @@ public class ReadablePropertiesFileConfigSpace extends AbstractConfigSpace imple
     }
 
     /**
-     * Get a reference to the map storing all of the contained properties
+     * Get a reference to the {@link Properties} storing all of the contained properties
      *
      * NOTE: This is the actual backing store, not a copy. This method should only be used by extending classes
      *

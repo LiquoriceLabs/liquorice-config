@@ -78,7 +78,7 @@ public class WritablePropertiesFileConfigSpace extends ReadablePropertiesFileCon
     @Override
     public void setObject(final String key, final Object value) {
         // Update the cached copy of the property
-        getBackingProperties().setProperty(key, getConfigFormatter().write(value).toString());
+        getBackingProperties().setProperty(checkNotNull(key), getConfigFormatter().write(checkNotNull(value)).toString());
 
         // Update the on-disk copy of the property
         try {
