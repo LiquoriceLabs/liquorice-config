@@ -1,7 +1,6 @@
 package io.liquorice.config.formatter.json.gson;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
@@ -13,6 +12,9 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_JSON;
+import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_MAP;
+import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_NOT_JSON;
 import static org.mockito.Mockito.mock;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -22,10 +24,6 @@ import static org.testng.Assert.assertTrue;
  * Created by mthorpe on 12/11/16.
  */
 public class GsonConfigFormatterTest {
-
-    private static final Map<String, String> TEST_MAP = ImmutableMap.of("test", "json");
-    private static final String TEST_JSON = "{\"test\":\"json\"}";
-    private static final String TEST_NOT_JSON = "{ hello bob }";
 
     private GsonConfigFormatter configFormatter;
 

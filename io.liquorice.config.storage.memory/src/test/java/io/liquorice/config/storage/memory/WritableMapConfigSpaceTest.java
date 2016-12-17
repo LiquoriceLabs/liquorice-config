@@ -1,7 +1,6 @@
 package io.liquorice.config.storage.memory;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import io.liquorice.config.api.formatter.ConfigFormatter;
 import io.liquorice.config.formatter.passthrough.PassThroughConfigFormatter;
 import org.testng.annotations.BeforeTest;
@@ -10,18 +9,24 @@ import org.testng.annotations.Test;
 import java.util.List;
 import java.util.Map;
 
-import static io.liquorice.config.storage.memory.ConfigSpaceTestData.BOOL_KEY;
-import static io.liquorice.config.storage.memory.ConfigSpaceTestData.BOOL_VALUE;
-import static io.liquorice.config.storage.memory.ConfigSpaceTestData.COMPLEX_KEY;
-import static io.liquorice.config.storage.memory.ConfigSpaceTestData.COMPLEX_VALUE;
-import static io.liquorice.config.storage.memory.ConfigSpaceTestData.DOUBLE_KEY;
-import static io.liquorice.config.storage.memory.ConfigSpaceTestData.DOUBLE_VALUE;
-import static io.liquorice.config.storage.memory.ConfigSpaceTestData.INT_KEY;
-import static io.liquorice.config.storage.memory.ConfigSpaceTestData.INT_VALUE;
-import static io.liquorice.config.storage.memory.ConfigSpaceTestData.LONG_KEY;
-import static io.liquorice.config.storage.memory.ConfigSpaceTestData.LONG_VALUE;
-import static io.liquorice.config.storage.memory.ConfigSpaceTestData.STRING_KEY;
-import static io.liquorice.config.storage.memory.ConfigSpaceTestData.STRING_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.BOOL_KEY;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.BOOL_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.COMPLEX_KEY;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.COMPLEX_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.DOUBLE_KEY;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.DOUBLE_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.INT_KEY;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.INT_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.LONG_KEY;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.LONG_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.STRING_KEY;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.STRING_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.UPDATED_BOOL_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.UPDATED_COMPLEX_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.UPDATED_DOUBLE_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.UPDATED_INT_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.UPDATED_LONG_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.UPDATED_STRING_VALUE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -29,13 +34,6 @@ import static org.testng.Assert.assertTrue;
  * Created by mthorpe on 12/13/16.
  */
 public class WritableMapConfigSpaceTest {
-
-    private static final boolean UPDATED_BOOL_VALUE = false;
-    private static final double UPDATED_DOUBLE_VALUE = 14.5;
-    private static final int UPDATED_INT_VALUE = 9;
-    private static final long UPDATED_LONG_VALUE = 31L;
-    private static final String UPDATED_STRING_VALUE = "updated string";
-    private static final List<String> UPDATED_COMPLEX_VALUE = Lists.newArrayList(INT_KEY, STRING_KEY);
 
     private WritableMapConfigSpace configSpace;
 

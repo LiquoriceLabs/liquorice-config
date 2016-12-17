@@ -3,7 +3,6 @@ package io.liquorice.config.formatter.json.jackson;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableMap;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -12,6 +11,9 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_JSON;
+import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_MAP;
+import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_NOT_JSON;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertEquals;
@@ -22,10 +24,6 @@ import static org.testng.Assert.assertTrue;
  * Created by mthorpe on 12/11/16.
  */
 public class JacksonConfigFormatterTest {
-
-    private static final Map<String, String> TEST_MAP = ImmutableMap.of("test", "json");
-    private static final String TEST_JSON = "{\"test\":\"json\"}";
-    private static final String TEST_NOT_JSON = "{ hello bob }";
 
     private JacksonConfigFormatter configFormatter;
 

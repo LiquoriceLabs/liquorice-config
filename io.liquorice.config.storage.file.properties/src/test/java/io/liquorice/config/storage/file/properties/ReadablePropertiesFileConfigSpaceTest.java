@@ -15,22 +15,22 @@ import java.nio.channels.FileChannel;
 import java.util.Properties;
 import java.util.function.Function;
 
-import static io.liquorice.config.storage.file.properties.ConfigSpaceTestData.BOOL_KEY;
-import static io.liquorice.config.storage.file.properties.ConfigSpaceTestData.BOOL_VALUE;
-import static io.liquorice.config.storage.file.properties.ConfigSpaceTestData.DEFAULT_BOOL_VALUE;
-import static io.liquorice.config.storage.file.properties.ConfigSpaceTestData.DEFAULT_DOUBLE_VALUE;
-import static io.liquorice.config.storage.file.properties.ConfigSpaceTestData.DEFAULT_INT_VALUE;
-import static io.liquorice.config.storage.file.properties.ConfigSpaceTestData.DEFAULT_LONG_VALUE;
-import static io.liquorice.config.storage.file.properties.ConfigSpaceTestData.DEFAULT_STRING_VALUE;
-import static io.liquorice.config.storage.file.properties.ConfigSpaceTestData.DOES_NOT_EXIST_KEY;
-import static io.liquorice.config.storage.file.properties.ConfigSpaceTestData.DOUBLE_KEY;
-import static io.liquorice.config.storage.file.properties.ConfigSpaceTestData.DOUBLE_VALUE;
-import static io.liquorice.config.storage.file.properties.ConfigSpaceTestData.INT_KEY;
-import static io.liquorice.config.storage.file.properties.ConfigSpaceTestData.INT_VALUE;
-import static io.liquorice.config.storage.file.properties.ConfigSpaceTestData.LONG_KEY;
-import static io.liquorice.config.storage.file.properties.ConfigSpaceTestData.LONG_VALUE;
-import static io.liquorice.config.storage.file.properties.ConfigSpaceTestData.STRING_KEY;
-import static io.liquorice.config.storage.file.properties.ConfigSpaceTestData.STRING_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.BOOL_KEY;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.BOOL_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.DEFAULT_BOOL_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.DEFAULT_DOUBLE_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.DEFAULT_INT_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.DEFAULT_LONG_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.DEFAULT_STRING_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.DOES_NOT_EXIST_KEY;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.DOUBLE_KEY;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.DOUBLE_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.INT_KEY;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.INT_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.LONG_KEY;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.LONG_VALUE;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.STRING_KEY;
+import static io.liquorice.config.test.support.ConfigSpaceTestData.STRING_VALUE;
 import static org.mockito.Mockito.mock;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -53,7 +53,8 @@ public class ReadablePropertiesFileConfigSpaceTest {
         seedProperties.setProperty(LONG_KEY, Long.toString(LONG_VALUE));
         seedProperties.setProperty(STRING_KEY, STRING_VALUE);
         seedProperties.store(baos, null);
-        final InputStreamReader isr = new InputStreamReader(new ByteArrayInputStream(baos.toByteArray()), Charsets.UTF_8);
+        final InputStreamReader isr = new InputStreamReader(new ByteArrayInputStream(baos.toByteArray()),
+                Charsets.UTF_8);
 
         final FileChannel mockFileChannel = mock(FileChannel.class);
         final Function<FileChannel, Reader> fileChannelReaderFunction = internalFileChannel -> isr;

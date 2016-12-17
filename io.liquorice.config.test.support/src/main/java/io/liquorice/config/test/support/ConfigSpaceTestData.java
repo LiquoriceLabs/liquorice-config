@@ -1,6 +1,7 @@
-package io.liquorice.config.storage.memory;
+package io.liquorice.config.test.support;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 import java.util.List;
 
@@ -30,4 +31,11 @@ public final class ConfigSpaceTestData {
     public static final long DEFAULT_LONG_VALUE = 24L;
     public static final String DEFAULT_STRING_VALUE = "default test value";
     public static final List<String> DEFAULT_COMPLEX_VALUE = ImmutableList.of(INT_KEY, LONG_KEY);
+
+    public static final boolean UPDATED_BOOL_VALUE = false;
+    public static final double UPDATED_DOUBLE_VALUE = 14.5;
+    public static final int UPDATED_INT_VALUE = 9;
+    public static final long UPDATED_LONG_VALUE = 31L;
+    public static final String UPDATED_STRING_VALUE = "updated string";
+    public static final List<String> UPDATED_COMPLEX_VALUE = Lists.newArrayList(INT_KEY, STRING_KEY);
 }
