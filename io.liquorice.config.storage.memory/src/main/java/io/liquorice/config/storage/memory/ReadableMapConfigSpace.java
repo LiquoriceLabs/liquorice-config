@@ -66,8 +66,6 @@ public class ReadableMapConfigSpace extends AbstractConfigSpace implements Confi
 
     /**
      * {@inheritDoc}
-     *
-     * @param key
      */
     @Override
     public <T> T getObjectRequired(final String key, final Class<T> clazz) throws ConfigurationException {

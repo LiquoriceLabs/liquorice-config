@@ -188,7 +188,7 @@ public class ReadablePropertiesFileConfigSpace extends AbstractConfigSpace imple
         }
 
         /**
-         * Overwrite the default {@link FileChannel} -> {@link Reader} {@link Function} with a custom one
+         * Overwrite the default {@link FileChannel} to {@link Reader} {@link Function} with a custom one
          *
          * This is likely only needed by inheriting classes and tests. The default should be sufficient in most cases.
          *
