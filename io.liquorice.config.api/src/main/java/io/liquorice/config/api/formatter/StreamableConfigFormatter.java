@@ -5,7 +5,7 @@ import java.io.Reader;
 import java.util.Optional;
 
 /**
- * Created by mthorpe on 12/14/16.
+ * A {@link ConfigFormatter} that supports reading streaming data
  */
 public interface StreamableConfigFormatter extends ConfigFormatter {
 
