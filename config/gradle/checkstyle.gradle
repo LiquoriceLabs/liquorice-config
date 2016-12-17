@@ -1,0 +1,17 @@
+subprojects {
+    apply plugin: 'checkstyle'
+
+    checkstyle {
+        configFile = new File("${projectDir}/../config/checkstyle/checkstyle.xml")
+        ignoreFailures = false
+        sourceSets = [ sourceSets.main, sourceSets.test, sourceSets.integrationTest ]
+        toolVersion = '7.3'
+    }
+
+    tasks.withType(Checkstyle) {
+        reports {
+            html.enabled = false
+            xml.enabled = true
+        }
+    }
+}
