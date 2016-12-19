@@ -1,6 +1,7 @@
 package io.liquorice.config.formatter.json.jackson;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.liquorice.config.api.formatter.StreamableConfigFormatter;
@@ -35,6 +36,8 @@ public class JacksonConfigFormatter implements StreamableConfigFormatter {
             return read((Reader) value, valueType);
         } else if (value instanceof String) {
             return read((String) value, valueType);
+        } else if (value instanceof JsonNode) {
+            return read((JsonNode) value, valueType);
         } else {
             return Optional.empty();
         }
@@ -68,6 +71,26 @@ public class JacksonConfigFormatter implements StreamableConfigFormatter {
     public <T> Optional<T> read(final String string, final Class<T> valueType) {
         try {
             return Optional.ofNullable(objectMapper.readValue(string, valueType));
+        } catch (final IOException e) {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Interprets a value as an entity of type {@link T}
+     *
+     * @param jsonNode
+     *            a {@link JsonNode} containing the value to format
+     * @param valueType
+     *            the type to format the value as
+     * @param <T>
+     *            type param
+     * @return An optional containing the original value, interpreted as type {@link T} if the conversion was
+     *         successful, or an {@link Optional#empty()} otherwise
+     */
+    public <T> Optional<T> read(final JsonNode jsonNode, final Class<T> valueType) {
+        try {
+            return Optional.ofNullable(objectMapper.treeToValue(jsonNode, valueType));
         } catch (final IOException e) {
             return Optional.empty();
         }

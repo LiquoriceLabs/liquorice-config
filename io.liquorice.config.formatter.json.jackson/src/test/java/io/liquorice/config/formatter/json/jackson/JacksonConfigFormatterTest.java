@@ -1,7 +1,10 @@
 package io.liquorice.config.formatter.json.jackson;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Charsets;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -14,8 +17,12 @@ import java.util.NoSuchElementException;
 import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_JSON;
 import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_MAP;
 import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_NOT_JSON;
+import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_STRING;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -92,6 +99,27 @@ public class JacksonConfigFormatterTest {
     }
 
     @SuppressWarnings("unchecked")
+    @Test
+    public void testReadObjectIsJsonNode() throws Exception {
+        final Object jsonNode = new TextNode(TEST_STRING);
+        final String read = configFormatter.read(jsonNode, String.class).get();
+        assertEquals(read, TEST_STRING);
+    }
+
+    @Test(expectedExceptions = NoSuchElementException.class)
+    public void testReadObjectIsMalformedJsonNode() throws Exception {
+        final JsonProcessingException mockException = mock(JsonProcessingException.class);
+        final ObjectMapper mockObjectMapper = mock(ObjectMapper.class);
+        final JsonNode jsonNode = new TextNode(TEST_STRING);
+        when(mockObjectMapper.treeToValue(eq(jsonNode), any())).thenThrow(mockException);
+
+        final JacksonConfigFormatter exceptionInducingObjectMapper = new JacksonConfigFormatter.Builder() //
+                .withObjectMapper(mockObjectMapper) //
+                .build();
+        exceptionInducingObjectMapper.read(jsonNode, String.class).get();
+    }
+
+    @SuppressWarnings("unchecked")
     @Test(expectedExceptions = NoSuchElementException.class)
     public void testUnsupportedInputType() throws Exception {
         final Object downcastedDouble = 2.0;
@@ -105,5 +133,17 @@ public class JacksonConfigFormatterTest {
 
         final String writtenJson = (String) written;
         assertEquals(writtenJson, TEST_JSON);
+    }
+
+    @Test(expectedExceptions = RuntimeException.class)
+    public void testWriteException() throws Exception {
+        final JsonProcessingException mockException = mock(JsonProcessingException.class);
+        final ObjectMapper mockObjectMapper = mock(ObjectMapper.class);
+        when(mockObjectMapper.writeValueAsString(eq(TEST_STRING))).thenThrow(mockException);
+
+        final JacksonConfigFormatter exceptionInducingObjectMapper = new JacksonConfigFormatter.Builder() //
+                .withObjectMapper(mockObjectMapper) //
+                .build();
+        exceptionInducingObjectMapper.write(TEST_STRING);
     }
 }
