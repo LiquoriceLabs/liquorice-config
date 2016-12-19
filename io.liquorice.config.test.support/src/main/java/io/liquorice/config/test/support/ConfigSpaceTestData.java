@@ -38,4 +38,13 @@ public final class ConfigSpaceTestData {
     public static final long UPDATED_LONG_VALUE = 31L;
     public static final String UPDATED_STRING_VALUE = "updated string";
     public static final List<String> UPDATED_COMPLEX_VALUE = Lists.newArrayList(INT_KEY, STRING_KEY);
+
+    public static final String JSON_STRING = "{" + //
+            String.format("\"%s\":%s,", BOOL_KEY, Boolean.toString(BOOL_VALUE)) + //
+            String.format("\"%s\":%f,", DOUBLE_KEY, DOUBLE_VALUE) + //
+            String.format("\"%s\":%d,", INT_KEY, INT_VALUE) + //
+            String.format("\"%s\":%d,", LONG_KEY, LONG_VALUE) + //
+            String.format("\"%s\":\"%s\",", STRING_KEY, STRING_VALUE) + //
+            String.format("\"%s\":[\"%s\",\"%s\"]", COMPLEX_KEY, BOOL_KEY, DOUBLE_KEY) + //
+            "}";
 }
