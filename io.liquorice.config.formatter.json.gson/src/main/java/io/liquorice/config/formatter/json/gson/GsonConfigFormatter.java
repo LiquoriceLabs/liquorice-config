@@ -1,6 +1,7 @@
 package io.liquorice.config.formatter.json.gson;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -10,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -19,6 +21,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * implementation is based around Google/Gson
  */
 public class GsonConfigFormatter implements StreamableConfigFormatter {
+
+    private static final GsonBuilder DEFAULT_GSON_BUILDER = new GsonBuilder();
 
     private Gson gson;
 
@@ -91,12 +95,14 @@ public class GsonConfigFormatter implements StreamableConfigFormatter {
     public static final class Builder {
 
         private GsonBuilder gsonBuilder;
+        private Map<Type, Object> typeAdapters;
 
         /**
          * CTOR
          */
         public Builder() {
-            this.gsonBuilder = new GsonBuilder();
+            this.gsonBuilder = DEFAULT_GSON_BUILDER;
+            this.typeAdapters = Maps.newHashMap();
         }
 
         /**
@@ -107,7 +113,7 @@ public class GsonConfigFormatter implements StreamableConfigFormatter {
          * @return this
          */
         public Builder withGsonBuilder(final GsonBuilder gsonBuilder) {
-            this.gsonBuilder = checkNotNull(gsonBuilder);
+            this.gsonBuilder = gsonBuilder;
             return this;
         }
 
@@ -115,13 +121,25 @@ public class GsonConfigFormatter implements StreamableConfigFormatter {
          * Register a {@link com.google.gson.TypeAdapter} with the underlying {@link GsonBuilder}
          * 
          * @param type
-         *            the type
+         *            the {@link Type}
          * @param typeAdapter
          *            the type adapter
          * @return this
          */
         public Builder withTypeAdapter(final Type type, final Object typeAdapter) {
-            this.gsonBuilder.registerTypeAdapter(checkNotNull(type), checkNotNull(typeAdapter));
+            this.typeAdapters.put(type, typeAdapter);
+            return this;
+        }
+
+        /**
+         * Register multiple {@link com.google.gson.TypeAdapter}s with the underlying {@link GsonBuilder}
+         *
+         * @param typeAdapters
+         *            the type adapters
+         * @return this
+         */
+        public Builder withTypeAdapters(final Map<Type, Object> typeAdapters) {
+            this.typeAdapters.putAll(typeAdapters);
             return this;
         }
 
@@ -131,6 +149,11 @@ public class GsonConfigFormatter implements StreamableConfigFormatter {
          * @return a new {@link GsonConfigFormatter} built to specification
          */
         public GsonConfigFormatter build() {
+            checkNotNull(gsonBuilder);
+            for (final Map.Entry<Type, Object> entry : typeAdapters.entrySet()) {
+                this.gsonBuilder.registerTypeAdapter(checkNotNull(entry.getKey()), checkNotNull(entry.getValue()));
+            }
+
             return new GsonConfigFormatter(this);
         }
     }

@@ -4,12 +4,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Sets;
 import io.liquorice.config.api.formatter.StreamableConfigFormatter;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -18,6 +21,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * implementation is based around FasterXML/jackson
  */
 public class JacksonConfigFormatter implements StreamableConfigFormatter {
+
+    private static final ObjectMapper DEFAULT_OBJECT_MAPPER = new ObjectMapper();
 
     private final ObjectMapper objectMapper;
 
@@ -112,13 +117,15 @@ public class JacksonConfigFormatter implements StreamableConfigFormatter {
      * Builder
      */
     public static final class Builder {
+        private Set<Module> modulesToRegister;
         private ObjectMapper objectMapper;
 
         /**
          * CTOR
          */
         public Builder() {
-            this.objectMapper = new ObjectMapper();
+            this.modulesToRegister = Sets.newHashSet();
+            this.objectMapper = DEFAULT_OBJECT_MAPPER;
         }
 
         /**
@@ -129,19 +136,31 @@ public class JacksonConfigFormatter implements StreamableConfigFormatter {
          * @return this
          */
         public Builder withObjectMapper(final ObjectMapper objectMapper) {
-            this.objectMapper = checkNotNull(objectMapper);
+            this.objectMapper = objectMapper;
             return this;
         }
 
         /**
-         * Register a module with the underlying {@link ObjectMapper}
+         * Register a {@link Module} with the underlying {@link ObjectMapper}
          *
          * @param module
          *            the module to register
          * @return this
          */
         public Builder withRegisteredModule(final Module module) {
-            this.objectMapper.registerModule(checkNotNull(module));
+            this.modulesToRegister.add(checkNotNull(module));
+            return this;
+        }
+
+        /**
+         * Register multiple {@link Module}s with the underlying {@link ObjectMapper}
+         *
+         * @param modules
+         *            the {@link Module}s to register
+         * @return this
+         */
+        public Builder withRegisteredModules(final Collection<Module> modules) {
+            this.modulesToRegister.addAll(checkNotNull(modules));
             return this;
         }
 
@@ -151,6 +170,10 @@ public class JacksonConfigFormatter implements StreamableConfigFormatter {
          * @return a new {@link JacksonConfigFormatter} built to specification
          */
         public JacksonConfigFormatter build() {
+            checkNotNull(objectMapper);
+            for (final Module module : modulesToRegister) {
+                this.objectMapper.registerModule(checkNotNull(module));
+            }
             return new JacksonConfigFormatter(this);
         }
     }
