@@ -11,10 +11,13 @@ import java.util.Map;
  */
 public class ConfigFormatterTestData {
 
-    public static final String TEST_STRING = "this is a test string";
+    public static final String TEST_KEY = "test";
+    public static final String TEST_VALUE = "this is a test string";
     public static final List<String> TEST_LIST = ImmutableList.of("string1", "string2");
-    public static final Map<String, String> TEST_MAP = ImmutableMap.of("test", "json");
+    public static final Map<String, String> TEST_MAP = ImmutableMap.of(TEST_KEY, TEST_VALUE);
 
-    public static final String TEST_JSON = "{\"test\":\"json\"}";
+    public static final String TEST_JSON = "{" + //
+            String.format("\"%s\":\"%s\"", TEST_KEY, TEST_VALUE) + //
+            "}";
     public static final String TEST_NOT_JSON = "{ hello bob }";
 }

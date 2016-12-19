@@ -4,6 +4,7 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import io.liquorice.config.api.formatter.StreamableConfigFormatter;
 
@@ -44,6 +45,8 @@ public class GsonConfigFormatter implements StreamableConfigFormatter {
             return read((Reader) value, valueType);
         } else if (value instanceof String) {
             return read((String) value, valueType);
+        } else if (value instanceof JsonElement) {
+            return read((JsonElement) value, valueType);
         } else {
             return Optional.empty();
         }
@@ -76,6 +79,26 @@ public class GsonConfigFormatter implements StreamableConfigFormatter {
     public <T> Optional<T> read(final String string, final Class<T> valueType) {
         try {
             return Optional.ofNullable(gson.fromJson(string, valueType));
+        } catch (final JsonSyntaxException e) {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Interprets a value as an entity of type {@link T}
+     *
+     * @param jsonElement
+     *            a {@link JsonElement} containing the value to format
+     * @param valueType
+     *            the type to format the value as
+     * @param <T>
+     *            type param
+     * @return An optional containing the original value, interpreted as type {@link T} if the conversion was
+     *         successful, or an {@link Optional#empty()} otherwise
+     */
+    public <T> Optional<T> read(final JsonElement jsonElement, final Class<T> valueType) {
+        try {
+            return Optional.ofNullable(gson.fromJson(jsonElement, valueType));
         } catch (final JsonSyntaxException e) {
             return Optional.empty();
         }

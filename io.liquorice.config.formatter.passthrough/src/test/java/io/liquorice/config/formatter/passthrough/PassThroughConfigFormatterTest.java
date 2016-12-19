@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 
 import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_LIST;
-import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_STRING;
+import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_VALUE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
@@ -25,9 +25,9 @@ public class PassThroughConfigFormatterTest {
 
     @Test
     public void testReadWriteSimple() {
-        final Object written = configFormatter.write(TEST_STRING);
+        final Object written = configFormatter.write(TEST_VALUE);
         final String read = configFormatter.read(written, String.class).get();
-        assertEquals(read, TEST_STRING);
+        assertEquals(read, TEST_VALUE);
     }
 
     @SuppressWarnings("unchecked")
@@ -42,7 +42,7 @@ public class PassThroughConfigFormatterTest {
     @SuppressWarnings("unchecked")
     @Test(expectedExceptions = ClassCastException.class)
     public void testReadFailure() {
-        final Object written = configFormatter.write(TEST_STRING);
+        final Object written = configFormatter.write(TEST_VALUE);
         final List<String> read = (List<String>) configFormatter.read(written, List.class).get();
         fail(String.format("Excepted ClassCastException when incorrectly casting '%s'", read));
     }

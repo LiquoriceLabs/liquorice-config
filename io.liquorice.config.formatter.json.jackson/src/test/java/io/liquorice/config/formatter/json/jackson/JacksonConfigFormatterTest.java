@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_JSON;
 import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_MAP;
 import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_NOT_JSON;
-import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_STRING;
+import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_VALUE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -101,16 +101,16 @@ public class JacksonConfigFormatterTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testReadObjectIsJsonNode() throws Exception {
-        final Object jsonNode = new TextNode(TEST_STRING);
+        final Object jsonNode = new TextNode(TEST_VALUE);
         final String read = configFormatter.read(jsonNode, String.class).get();
-        assertEquals(read, TEST_STRING);
+        assertEquals(read, TEST_VALUE);
     }
 
     @Test(expectedExceptions = NoSuchElementException.class)
     public void testReadObjectIsMalformedJsonNode() throws Exception {
         final JsonProcessingException mockException = mock(JsonProcessingException.class);
         final ObjectMapper mockObjectMapper = mock(ObjectMapper.class);
-        final JsonNode jsonNode = new TextNode(TEST_STRING);
+        final JsonNode jsonNode = new TextNode(TEST_VALUE);
         when(mockObjectMapper.treeToValue(eq(jsonNode), any())).thenThrow(mockException);
 
         final JacksonConfigFormatter exceptionInducingObjectMapper = new JacksonConfigFormatter.Builder() //
@@ -139,11 +139,11 @@ public class JacksonConfigFormatterTest {
     public void testWriteException() throws Exception {
         final JsonProcessingException mockException = mock(JsonProcessingException.class);
         final ObjectMapper mockObjectMapper = mock(ObjectMapper.class);
-        when(mockObjectMapper.writeValueAsString(eq(TEST_STRING))).thenThrow(mockException);
+        when(mockObjectMapper.writeValueAsString(eq(TEST_VALUE))).thenThrow(mockException);
 
         final JacksonConfigFormatter exceptionInducingObjectMapper = new JacksonConfigFormatter.Builder() //
                 .withObjectMapper(mockObjectMapper) //
                 .build();
-        exceptionInducingObjectMapper.write(TEST_STRING);
+        exceptionInducingObjectMapper.write(TEST_VALUE);
     }
 }

@@ -3,6 +3,7 @@ package io.liquorice.config.formatter.json.gson;
 import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.TypeAdapter;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -15,6 +16,7 @@ import java.util.NoSuchElementException;
 import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_JSON;
 import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_MAP;
 import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_NOT_JSON;
+import static io.liquorice.config.test.support.ConfigFormatterTestData.TEST_VALUE;
 import static org.mockito.Mockito.mock;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -91,6 +93,14 @@ public class GsonConfigFormatterTest {
     public void testReadObjectIsMalformedStringContent() throws Exception {
         final Object downcastedString = TEST_NOT_JSON;
         configFormatter.read(downcastedString, Map.class).get();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testReadObjectIsJsonElement() throws Exception {
+        final Object jsonElement = new JsonPrimitive(TEST_VALUE);
+        final String read = configFormatter.read(jsonElement, String.class).get();
+        assertEquals(read, TEST_VALUE);
     }
 
     @SuppressWarnings("unchecked")
