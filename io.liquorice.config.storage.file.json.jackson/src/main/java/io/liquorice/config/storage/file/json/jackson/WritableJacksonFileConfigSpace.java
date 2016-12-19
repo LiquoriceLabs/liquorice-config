@@ -90,6 +90,7 @@ public class WritableJacksonFileConfigSpace extends ReadableJacksonFileConfigSpa
     /**
      * Associate the $value with the $key
      *
+     * <p>
      * This method will update both an in-memory cache of the property as well as the on-disk copy of the properties
      * file used to construct this {@link WritableJacksonFileConfigSpace}.
      *
@@ -175,6 +176,7 @@ public class WritableJacksonFileConfigSpace extends ReadableJacksonFileConfigSpa
         /**
          * Overwrite the default {@link FileChannel} to {@link Reader} {@link Function} with a custom one
          *
+         * <p>
          * This is likely only needed by inheriting classes and tests. The default should be sufficient in most cases.
          *
          * @param fileChannelReaderFunction
@@ -225,6 +227,7 @@ public class WritableJacksonFileConfigSpace extends ReadableJacksonFileConfigSpa
         /**
          * Overwrite the default {@link FileChannel} to {@link Writer} {@link Function} with a custom one
          *
+         * <p>
          * This is likely only needed by inheriting classes and tests. The default should be sufficient in most cases.
          *
          * @param fileChannelWriterFunction

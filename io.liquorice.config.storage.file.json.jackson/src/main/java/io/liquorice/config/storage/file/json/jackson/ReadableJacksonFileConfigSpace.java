@@ -124,6 +124,7 @@ public class ReadableJacksonFileConfigSpace extends AbstractConfigSpace implemen
     /**
      * Get a reference to the {@link JsonNode} storing all of the contained properties
      *
+     * <p>
      * NOTE: This is the actual backing store, not a copy. This method should only be used by extending classes
      *
      * @return the backing store
@@ -135,6 +136,7 @@ public class ReadableJacksonFileConfigSpace extends AbstractConfigSpace implemen
     /**
      * Get a reference to the {@link ObjectMapper} used to interpret the properties
      *
+     * <p>
      * NOTE: This is the actual backing {@link ObjectMapper}, not a copy. This method should only be used by extending
      * classes
      *
@@ -198,6 +200,7 @@ public class ReadableJacksonFileConfigSpace extends AbstractConfigSpace implemen
         /**
          * Overwrite the default {@link FileChannel} to {@link Reader} {@link Function} with a custom one
          *
+         * <p>
          * This is likely only needed by inheriting classes and tests. The default should be sufficient in most cases.
          *
          * @param fileChannelReaderFunction

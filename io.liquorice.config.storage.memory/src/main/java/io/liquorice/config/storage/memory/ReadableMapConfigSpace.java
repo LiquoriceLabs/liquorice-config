@@ -95,6 +95,7 @@ public class ReadableMapConfigSpace extends AbstractConfigSpace implements Confi
     /**
      * Get a reference to the map storing all of the contained properties
      *
+     * <p>
      * NOTE: This is the actual backing store, not a copy. This method should only be used by extending classes
      *
      * @return the backing store
