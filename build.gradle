@@ -6,12 +6,9 @@ def buildTimeDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss'Z'")
 buildTimeDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
 def buildTime = buildTimeDateFormat.format(date)
 
-def versionTimeDateFormat = new SimpleDateFormat("yyyyMMdd")
-versionTimeDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
-def versionTime = versionTimeDateFormat.format(date)
-
 def majorVersion = 0
-def minorVersion = 1
+def minorVersion = 2
+def minorMinorVersion = 0
 def javaVersion = 1.8
 
 apply plugin: 'base'
@@ -31,7 +28,7 @@ subprojects {
     def vendor = 'Liquorice.io'
 
     group = 'io.liquorice.config'
-    version = "${majorVersion}.${minorVersion}.${versionTime}"
+    version = "${majorVersion}.${minorVersion}.${minorMinorVersion}"
 
     jar.doFirst {
         manifest {
