@@ -1,0 +1,36 @@
+subprojects {
+    apply plugin: 'jacoco'
+
+    jacoco {
+        toolVersion = "0.7.1.201405082137"
+    }
+
+    // Unit testing
+    test {
+        jacoco {
+            destinationFile = file("${buildDir}/jacoco/jacoco-unit.exec")
+            classDumpFile = file("${buildDir}/jacoco/test")
+        }
+    }
+
+    // Integration testing
+    task integrationTest(type: Test) {
+        jacoco {
+            destinationFile = file("${buildDir}/jacoco/jacoco-integration.exec")
+            classDumpFile = file("${buildDir}/jacoco/integration-test")
+        }
+    }
+
+    // Reporting
+    jacocoTestReport {
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports after running tests."
+        reports {
+            xml.enabled = true
+            csv.enabled false
+            html.enabled = true
+        }
+        additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
+        executionData = files("${buildDir}/jacoco/jacoco-unit.exec", "${buildDir}/jacoco/jacoco-integration.exec")
+    }
+}

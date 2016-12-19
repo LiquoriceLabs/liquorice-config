@@ -1,0 +1,7 @@
+dependencies {
+    compile project(':io.liquorice.config.api')
+    compile project(':io.liquorice.config.exceptions')
+
+    testCompile project(':io.liquorice.config.formatter.passthrough')
+    testCompile project(':io.liquorice.config.test.support')
+}
