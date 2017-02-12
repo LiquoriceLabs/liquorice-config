@@ -1,0 +1,26 @@
+dist: trusty
+language: java
+sudo: false
+
+matrix:
+  include:
+  - os: linux
+    jdk: oraclejdk8
+  - os: linux
+    jdk: openjdk8
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+script:
+  - ./gradlew clean build
+
+notifications:
+  slack:
+    secure: J9BMeBWK1IprubushvgkAnZhA9eqI80kHacDyL14CU/Z13Ew5Zqf/VkRbKb+ZNE6g11XmVVzcIJeWES3To9kdX5Ww5RVtzxM4CskUvaKQbPQIwhTGVkBchstW+Xr5l667gYiKw0Q77tS2eZ+fnkhpkukeFav9CHZoJ+4+jgHXcczD7hGWyeMol5d2y7df/bf6YNqyGQomN2qKt6v/f32LH/q7DRUauxk0YWLg/Ru/TW/wCr222q1R4iJZOpz03G+EUrej902OKhOa/wn7XVVW8L1LhoxNQahRAp5WkAItpnI4N6F9gklNrF+BBeUKfIzg0daX9amPMrDrAlNSyu9AQ5sQjTd8zjFZnsmwHiIZn/iDbEpOmPGNrUFHvb7hzxS9VJ23QRAAbpjRjEZ7QkdUeMCEXVJJz2EKihZ2AxhhC+NRrcwTAaTgCOt7gPdv+/qyyDvjRBiq+sc6UwWR7cFtWfdonNEIZtRB2uD2VtMUMbw4Ou3FE+lJpty/KgnnZnmoqUH+5pbqR0VnjAP/Ri3s53xLBsAIva4Xx4ymufOGerKt4ybIz3rE49lVrMRYBPFgPkfyFm2HYvdtzZV8MtB2cyb8yrhY+0cogcMIT9X7yR3m1XY7gx/GJ7O+uWuDYxx+Ptl4ciuTQ0zz6frClKaR7rwLZH7WRIUYBE+aCt1dTo=
