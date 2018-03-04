@@ -11,11 +11,11 @@ When you're ready to submit your code, please make a [pull request](https://help
 
 - Always rebase your branch before creating a pull request
 - When possible, also squash consecutive related commits
-- If the pull request fixes a recorded [issue] (https://github.com/LiquoriceLabs/liquorice-config/issues)
+- If the pull request fixes a recorded [issue](https://github.com/LiquoriceLabs/liquorice-config/issues)
   - Please refer to the issue number in the pull request title
-  - Please also [reference those issues] (https://help.github.com/articles/closing-issues-via-commit-messages) in the commit message
+  - Please also [reference those issues](https://help.github.com/articles/closing-issues-via-commit-messages) in the commit message
 - If your pull request introduces new functionality, please update the [wiki] () accordingly
-- Please follow [standard issue etiquette] (http://www.defmacro.org/2013/04/03/issue-etiquette.html) when working with issues
+- Please follow [standard issue etiquette](http://www.defmacro.org/2013/04/03/issue-etiquette.html) when working with issues
 
 #### Core Contributors
 
