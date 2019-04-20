@@ -9,17 +9,12 @@ matrix:
   - os: linux
     jdk: openjdk8
 
-before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+env:
+  MVNW_REPOURL: http://nexus.liquorice.io:8081/repository/public
 
-cache:
-  directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
+install: ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V --settings maven-settings.xml
 
-script:
-  - ./gradlew clean build
+script: ./mvnw clean verify -Pcode-coverage,integration-tests,static-code-analysis --settings maven-settings.xml
 
 notifications:
   slack:

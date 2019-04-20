@@ -23,8 +23,8 @@ You know what you're doing. Just keep doing it.
 
 ## Building
 
-1. Install [Gradle](http://www.gradle.org/)
-2. Navigate to the project directory and run 'gradle build' from command line
+1. Install [Maven](http://apache.maven.org/)
+2. Navigate to the project directory and run 'mvn clean verify -Pintegration-tests' from command line
 
 ## Best Practices
 
