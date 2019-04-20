@@ -8,7 +8,7 @@ Liquorice Config is a framework for storing and retrieving dynamically updating 
 ### Technology Stack
 
 - [Java 8](http://www.oracle.com/technetwork/java/javase/overview/java8-2100321.html)
-- [Gradle](https://gradle.org/)
+- [Maven](https://apache.maven.org/)
 
 ### Documentation
 

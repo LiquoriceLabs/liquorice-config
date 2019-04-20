@@ -1,6 +1,0 @@
-dependencies {
-    compile project(':io.liquorice.config.exceptions')
-
-    // 3rd party dependencies
-    compile group: 'com.google.guava', name: 'guava', version: '19.0'
-}
