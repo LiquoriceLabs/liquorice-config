@@ -10,7 +10,17 @@
       <repositories>
         <repository>
           <id>central</id>
-          <url>http://central</url>
+          <url>http://repo1.maven.org/maven2</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+        <repository>
+          <id>liquorice.nexus</id>
+          <url>http://nexus.liquorice.io:8081/repository/maven-releases</url>
           <releases>
             <enabled>true</enabled>
           </releases>
@@ -22,7 +32,7 @@
       <pluginRepositories>
         <pluginRepository>
           <id>central</id>
-          <url>http://central</url>
+          <url>http://repo1.maven.org/maven2</url>
           <releases>
             <enabled>true</enabled>
           </releases>
@@ -33,22 +43,6 @@
       </pluginRepositories>
     </profile>
   </profiles>
-
-  <mirrors>
-    <mirror>
-      <id>liquorice.nexus</id>
-      <mirrorOf>*</mirrorOf>
-      <url>http://nexus.liquorice.io:8081/repository/public</url>
-    </mirror>
-  </mirrors>
-
-  <servers>
-    <server>
-      <id>liquorice.nexus</id>
-      <username>admin</username>
-      <password>admin123</password>
-    </server>
-  </servers>
 
   <activeProfiles>
     <activeProfile>liquorice.nexus</activeProfile>
