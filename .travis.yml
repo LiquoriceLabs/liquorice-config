@@ -9,9 +9,9 @@ matrix:
   - os: linux
     jdk: openjdk8
 
-install: ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V --settings maven-settings.xml
+install: ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 
-script: ./mvnw clean verify -Pcode-coverage,integration-tests,static-code-analysis --settings maven-settings.xml
+script: ./mvnw clean verify -Dfull-build
 
 notifications:
   slack:
