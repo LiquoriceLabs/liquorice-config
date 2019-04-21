@@ -9,9 +9,6 @@ matrix:
   - os: linux
     jdk: openjdk8
 
-env:
-  MVNW_REPOURL: http://nexus.liquorice.io:8081/repository/public
-
 install: ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V --settings maven-settings.xml
 
 script: ./mvnw clean verify -Pcode-coverage,integration-tests,static-code-analysis --settings maven-settings.xml
