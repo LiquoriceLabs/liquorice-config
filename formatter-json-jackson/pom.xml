@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
@@ -5,25 +6,12 @@
     <parent>
         <groupId>io.liquorice.config</groupId>
         <artifactId>parent</artifactId>
-        <version>0.3.0</version>
+        <version>0.3.1</version>
     </parent>
 
     <artifactId>formatter-json-jackson</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>io.liquorice.config</groupId>
-            <artifactId>config-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.liquorice.config</groupId>
-            <artifactId>config-exceptions</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.liquorice.config</groupId>
-            <artifactId>test-support</artifactId>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -39,6 +27,19 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.liquorice.config</groupId>
+            <artifactId>config-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.liquorice.config</groupId>
+            <artifactId>config-exceptions</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.liquorice.config</groupId>
+            <artifactId>test-support</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
