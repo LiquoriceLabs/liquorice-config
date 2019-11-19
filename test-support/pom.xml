@@ -5,7 +5,7 @@
     <parent>
         <groupId>io.liquorice.config</groupId>
         <artifactId>parent</artifactId>
-        <version>0.3.3</version>
+        <version>0.3.4</version>
     </parent>
 
     <artifactId>test-support</artifactId>
@@ -14,6 +14,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
