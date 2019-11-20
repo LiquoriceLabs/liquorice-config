@@ -1,20 +1,19 @@
 package io.liquorice.config.storage.file.properties;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static io.liquorice.config.utils.StringUtils.requireNonEmpty;
+import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
-
-import com.google.common.base.Charsets;
-import com.google.common.base.Strings;
 
 import io.liquorice.config.api.formatter.ConfigFormatter;
 import io.liquorice.config.api.storage.WritableConfigSpace;
-import io.liquorice.config.exception.ConfigurationException;
 
 /**
  * A {@link java.util.Properties} backed implementation of a {@link WritableConfigSpace} where the contained items can
@@ -23,12 +22,12 @@ import io.liquorice.config.exception.ConfigurationException;
 public class WritablePropertiesFileConfigSpace extends ReadablePropertiesFileConfigSpace implements WritableConfigSpace {
 
     private static final Function<FileChannel, Writer> DEFAULT_FILE_CHANNEL_WRITER_FUNCTION = internalFileChannel -> Channels
-            .newWriter(internalFileChannel, Charsets.UTF_8.name());
+            .newWriter(internalFileChannel, StandardCharsets.UTF_8.name());
 
     private final FileChannel fileChannel;
     private final Function<FileChannel, Writer> fileChannelWriterFunction;
 
-    private WritablePropertiesFileConfigSpace(final Builder builder) throws IOException {
+    private WritablePropertiesFileConfigSpace(final Builder builder) {
         super(builder.delegateBuilder.build());
         this.fileChannel = builder.fileChannel;
         this.fileChannelWriterFunction = builder.fileChannelWriterFunction;
@@ -39,7 +38,7 @@ public class WritablePropertiesFileConfigSpace extends ReadablePropertiesFileCon
      */
     @Override
     public void remove(final String key) {
-        checkNotNull(Strings.emptyToNull(key));
+        requireNonEmpty(key);
 
         getBackingProperties().remove(key);
         updateOnDiskStore();
@@ -91,11 +90,11 @@ public class WritablePropertiesFileConfigSpace extends ReadablePropertiesFileCon
      */
     @Override
     public void setObject(final String key, final Object value) {
-        checkNotNull(Strings.emptyToNull(key));
-        checkNotNull(value, "Null value. Call ConfigSpace#remove to instead.");
+        requireNonEmpty(key);
+        requireNonNull(value, "Null value. Call ConfigSpace#remove to instead.");
 
         // Update the cached copy of the property
-        getBackingProperties().setProperty(checkNotNull(key), getConfigFormatter().write(value).toString());
+        getBackingProperties().setProperty(key, getConfigFormatter().write(value).toString());
 
         // Update the on-disk copy of the property
         updateOnDiskStore();
@@ -104,10 +103,10 @@ public class WritablePropertiesFileConfigSpace extends ReadablePropertiesFileCon
     private void updateOnDiskStore() {
         try {
             try (final Writer writer = fileChannelWriterFunction.apply(fileChannel)) {
-                getBackingProperties().store(writer, null);
+                getBackingProperties().store(requireNonNull(writer), null);
             }
         } catch (final IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
 
@@ -195,18 +194,12 @@ public class WritablePropertiesFileConfigSpace extends ReadablePropertiesFileCon
          * Build
          *
          * @return a new {@link WritablePropertiesFileConfigSpace} built to specification
-         * @throws ConfigurationException
-         *             if there was a problem building
          */
-        public WritablePropertiesFileConfigSpace build() throws ConfigurationException {
-            checkNotNull(fileChannel);
-            checkNotNull(fileChannelWriterFunction);
-            try {
-                return new WritablePropertiesFileConfigSpace(this);
-            } catch (final IOException e) {
-                throw new ConfigurationException(String.format("Error building %s",
-                        WritablePropertiesFileConfigSpace.class.getSimpleName()), e);
-            }
+        public WritablePropertiesFileConfigSpace build() {
+            requireNonNull(fileChannel);
+            requireNonNull(fileChannelWriterFunction);
+
+            return new WritablePropertiesFileConfigSpace(this);
         }
     }
 }

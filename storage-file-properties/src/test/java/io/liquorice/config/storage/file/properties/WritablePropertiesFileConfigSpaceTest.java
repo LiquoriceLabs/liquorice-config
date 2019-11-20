@@ -26,6 +26,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.function.Function;
 
@@ -33,8 +34,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import com.google.common.base.Charsets;
 
 import io.liquorice.config.api.formatter.ConfigFormatter;
 import io.liquorice.config.formatter.passthrough.PassThroughConfigFormatter;
@@ -57,8 +56,8 @@ class WritablePropertiesFileConfigSpaceTest {
         seedProperties.setProperty(STRING_KEY, STRING_VALUE);
         seedProperties.store(baos, null);
         final InputStreamReader isr = new InputStreamReader(new ByteArrayInputStream(baos.toByteArray()),
-                Charsets.UTF_8);
-        final OutputStreamWriter osw = new OutputStreamWriter(outputStream, Charsets.UTF_8);
+                StandardCharsets.UTF_8);
+        final OutputStreamWriter osw = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
 
         final Function<FileChannel, Reader> fileChannelReaderFunction = internalFileChannel -> isr;
         final Function<FileChannel, Writer> fileChannelWriterFunction = internalFileChannel -> osw;

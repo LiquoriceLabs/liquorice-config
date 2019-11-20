@@ -1,21 +1,21 @@
 package io.liquorice.config.storage.file.json.jackson;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static io.liquorice.config.utils.StringUtils.requireNonEmpty;
+import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Charsets;
-import com.google.common.base.Strings;
-import com.google.common.collect.Sets;
 
 import io.liquorice.config.api.formatter.ConfigFormatter;
 import io.liquorice.config.api.storage.AbstractConfigSpace;
@@ -30,7 +30,7 @@ import io.liquorice.config.formatter.json.jackson.JacksonConfigFormatter;
 public class ReadableJacksonFileConfigSpace extends AbstractConfigSpace {
 
     private static final Function<FileChannel, Reader> DEFAULT_FILE_CHANNEL_READER_FUNCTION = internalFileChannel -> Channels
-            .newReader(checkNotNull(internalFileChannel), Charsets.UTF_8.name());
+            .newReader(requireNonNull(internalFileChannel), StandardCharsets.UTF_8.name());
 
     private static final ObjectMapper DEFAULT_OBJECT_MAPPER = new ObjectMapper();
 
@@ -119,7 +119,7 @@ public class ReadableJacksonFileConfigSpace extends AbstractConfigSpace {
      */
     @Override
     public boolean hasValue(final String key) {
-        return rootNode.hasNonNull(checkNotNull(Strings.emptyToNull(key)));
+        return rootNode.hasNonNull(requireNonEmpty(key));
     }
 
     /**
@@ -148,8 +148,8 @@ public class ReadableJacksonFileConfigSpace extends AbstractConfigSpace {
     }
 
     private JsonNode getNonNullable(final String key) {
-        final JsonNode value = getBackingJsonNode().get(checkNotNull(Strings.emptyToNull(key)));
-        checkNotNull(value);
+        final JsonNode value = getBackingJsonNode().get(requireNonEmpty(key));
+        requireNonNull(value);
         return value;
     }
 
@@ -170,7 +170,7 @@ public class ReadableJacksonFileConfigSpace extends AbstractConfigSpace {
         public Builder() {
             this.configFormatter = new JacksonConfigFormatter.Builder().build();
             this.fileChannelReaderFunction = DEFAULT_FILE_CHANNEL_READER_FUNCTION;
-            this.modulesToRegister = Sets.newHashSet();
+            this.modulesToRegister = new HashSet<>();
             this.objectMapper = DEFAULT_OBJECT_MAPPER;
         }
 
@@ -233,7 +233,7 @@ public class ReadableJacksonFileConfigSpace extends AbstractConfigSpace {
          * @return this
          */
         public Builder withRegisteredModule(final Module module) {
-            this.modulesToRegister.add(checkNotNull(module));
+            this.modulesToRegister.add(requireNonNull(module));
             return this;
         }
 
@@ -257,13 +257,13 @@ public class ReadableJacksonFileConfigSpace extends AbstractConfigSpace {
          *             if there was a problem building
          */
         public ReadableJacksonFileConfigSpace build() throws ConfigurationException {
-            checkNotNull(configFormatter);
-            checkNotNull(fileChannel);
-            checkNotNull(fileChannelReaderFunction);
-            checkNotNull(objectMapper);
+            requireNonNull(configFormatter);
+            requireNonNull(fileChannel);
+            requireNonNull(fileChannelReaderFunction);
+            requireNonNull(objectMapper);
 
             for (final Module module : modulesToRegister) {
-                objectMapper.registerModule(checkNotNull(module));
+                objectMapper.registerModule(requireNonNull(module));
             }
 
             try {

@@ -30,6 +30,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Function;
 
@@ -39,7 +40,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -55,11 +55,11 @@ import io.liquorice.config.formatter.json.gson.GsonConfigFormatter;
 class WritableGsonFileConfigSpaceTest {
 
     private static WritableGsonFileConfigSpace createConfigSpace(final OutputStream outputStream,
-            final FileChannel fileChannel) throws Exception {
+            final FileChannel fileChannel) {
         // Initialize seed properties
         final InputStreamReader isr = new InputStreamReader(new ByteArrayInputStream(
-                JSON_STRING.getBytes(Charsets.UTF_8)), Charsets.UTF_8);
-        final OutputStreamWriter osw = new OutputStreamWriter(outputStream, Charsets.UTF_8);
+                JSON_STRING.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
+        final OutputStreamWriter osw = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
 
         final Function<FileChannel, Reader> fileChannelReaderFunction = internalFileChannel -> isr;
         final Function<FileChannel, Writer> fileChannelWriterFunction = internalFileChannel -> osw;
@@ -88,7 +88,7 @@ class WritableGsonFileConfigSpaceTest {
     }
 
     @Test
-    void testUpdateBoolean() throws Exception {
+    void testUpdateBoolean() {
         // Setup mocks
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final WritableGsonFileConfigSpace configSpace = createConfigSpace(baos, mockFileChannel);
@@ -100,7 +100,7 @@ class WritableGsonFileConfigSpaceTest {
         assertEquals(UPDATED_BOOL_VALUE, configSpace.getBooleanRequired(BOOL_KEY));
 
         // Verify the on disk properties were updated
-        final Reader isr = new InputStreamReader(new ByteArrayInputStream(baos.toByteArray()), Charsets.UTF_8);
+        final Reader isr = new InputStreamReader(new ByteArrayInputStream(baos.toByteArray()), StandardCharsets.UTF_8);
         final JsonObject jsonObject = new JsonParser().parse(gson.newJsonReader(isr)).getAsJsonObject();
         assertEquals(UPDATED_BOOL_VALUE, jsonObject.get(BOOL_KEY).getAsBoolean());
         assertEquals(DOUBLE_VALUE, jsonObject.get(DOUBLE_KEY).getAsDouble());
@@ -111,7 +111,7 @@ class WritableGsonFileConfigSpaceTest {
     }
 
     @Test
-    void testUpdateDouble() throws Exception {
+    void testUpdateDouble() {
         // Setup mocks
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final WritableGsonFileConfigSpace configSpace = createConfigSpace(baos, mockFileChannel);
@@ -123,7 +123,7 @@ class WritableGsonFileConfigSpaceTest {
         assertEquals(configSpace.getDoubleRequired(DOUBLE_KEY), UPDATED_DOUBLE_VALUE);
 
         // Verify the on disk properties were updated
-        final Reader isr = new InputStreamReader(new ByteArrayInputStream(baos.toByteArray()), Charsets.UTF_8);
+        final Reader isr = new InputStreamReader(new ByteArrayInputStream(baos.toByteArray()), StandardCharsets.UTF_8);
         final JsonObject jsonObject = new JsonParser().parse(gson.newJsonReader(isr)).getAsJsonObject();
         assertEquals(BOOL_VALUE, jsonObject.get(BOOL_KEY).getAsBoolean());
         assertEquals(UPDATED_DOUBLE_VALUE, jsonObject.get(DOUBLE_KEY).getAsDouble());
@@ -134,7 +134,7 @@ class WritableGsonFileConfigSpaceTest {
     }
 
     @Test
-    void testUpdateInt() throws Exception {
+    void testUpdateInt() {
         // Setup mocks
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final WritableGsonFileConfigSpace configSpace = createConfigSpace(baos, mockFileChannel);
@@ -146,7 +146,7 @@ class WritableGsonFileConfigSpaceTest {
         assertEquals(configSpace.getIntRequired(INT_KEY), UPDATED_INT_VALUE);
 
         // Verify the on disk properties were updated
-        final Reader isr = new InputStreamReader(new ByteArrayInputStream(baos.toByteArray()), Charsets.UTF_8);
+        final Reader isr = new InputStreamReader(new ByteArrayInputStream(baos.toByteArray()), StandardCharsets.UTF_8);
         final JsonObject jsonObject = new JsonParser().parse(gson.newJsonReader(isr)).getAsJsonObject();
         assertEquals(BOOL_VALUE, jsonObject.get(BOOL_KEY).getAsBoolean());
         assertEquals(DOUBLE_VALUE, jsonObject.get(DOUBLE_KEY).getAsDouble());
@@ -157,7 +157,7 @@ class WritableGsonFileConfigSpaceTest {
     }
 
     @Test
-    void testUpdateLong() throws Exception {
+    void testUpdateLong() {
         // Setup mocks
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final WritableGsonFileConfigSpace configSpace = createConfigSpace(baos, mockFileChannel);
@@ -169,7 +169,7 @@ class WritableGsonFileConfigSpaceTest {
         assertEquals(configSpace.getLongRequired(LONG_KEY), UPDATED_LONG_VALUE);
 
         // Verify the on disk properties were updated
-        final Reader isr = new InputStreamReader(new ByteArrayInputStream(baos.toByteArray()), Charsets.UTF_8);
+        final Reader isr = new InputStreamReader(new ByteArrayInputStream(baos.toByteArray()), StandardCharsets.UTF_8);
         final JsonObject jsonObject = new JsonParser().parse(gson.newJsonReader(isr)).getAsJsonObject();
         assertEquals(BOOL_VALUE, jsonObject.get(BOOL_KEY).getAsBoolean());
         assertEquals(DOUBLE_VALUE, jsonObject.get(DOUBLE_KEY).getAsDouble());
@@ -180,7 +180,7 @@ class WritableGsonFileConfigSpaceTest {
     }
 
     @Test
-    void testUpdateString() throws Exception {
+    void testUpdateString() {
         // Setup mocks
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final WritableGsonFileConfigSpace configSpace = createConfigSpace(baos, mockFileChannel);
@@ -192,7 +192,7 @@ class WritableGsonFileConfigSpaceTest {
         assertEquals(configSpace.getStringRequired(STRING_KEY), UPDATED_STRING_VALUE);
 
         // Verify the on disk properties were updated
-        final Reader isr = new InputStreamReader(new ByteArrayInputStream(baos.toByteArray()), Charsets.UTF_8);
+        final Reader isr = new InputStreamReader(new ByteArrayInputStream(baos.toByteArray()), StandardCharsets.UTF_8);
         final JsonObject jsonObject = new JsonParser().parse(gson.newJsonReader(isr)).getAsJsonObject();
         assertEquals(BOOL_VALUE, jsonObject.get(BOOL_KEY).getAsBoolean());
         assertEquals(DOUBLE_VALUE, jsonObject.get(DOUBLE_KEY).getAsDouble());
@@ -203,7 +203,7 @@ class WritableGsonFileConfigSpaceTest {
     }
 
     @Test
-    void testUpdateObject() throws Exception {
+    void testUpdateObject() {
         // Setup mocks
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final WritableGsonFileConfigSpace configSpace = createConfigSpace(baos, mockFileChannel);
@@ -215,7 +215,7 @@ class WritableGsonFileConfigSpaceTest {
         assertEquals(configSpace.getObjectRequired(COMPLEX_KEY, List.class), UPDATED_COMPLEX_VALUE);
 
         // Verify the on disk properties were updated
-        final Reader isr = new InputStreamReader(new ByteArrayInputStream(baos.toByteArray()), Charsets.UTF_8);
+        final Reader isr = new InputStreamReader(new ByteArrayInputStream(baos.toByteArray()), StandardCharsets.UTF_8);
         final JsonObject jsonObject = new JsonParser().parse(gson.newJsonReader(isr)).getAsJsonObject();
         assertEquals(BOOL_VALUE, jsonObject.get(BOOL_KEY).getAsBoolean());
         assertEquals(DOUBLE_VALUE, jsonObject.get(DOUBLE_KEY).getAsDouble());
@@ -226,7 +226,7 @@ class WritableGsonFileConfigSpaceTest {
     }
 
     @Test
-    void testRemoveProperty() throws Exception {
+    void testRemoveProperty() {
         // Setup mocks
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final WritableGsonFileConfigSpace configSpace = createConfigSpace(baos, mockFileChannel);
@@ -238,7 +238,7 @@ class WritableGsonFileConfigSpaceTest {
         assertFalse(configSpace.hasValue(BOOL_KEY));
 
         // Verify the on disk properties were updated
-        final Reader isr = new InputStreamReader(new ByteArrayInputStream(baos.toByteArray()), Charsets.UTF_8);
+        final Reader isr = new InputStreamReader(new ByteArrayInputStream(baos.toByteArray()), StandardCharsets.UTF_8);
         final JsonObject jsonObject = new JsonParser().parse(gson.newJsonReader(isr)).getAsJsonObject();
         assertFalse(jsonObject.has(BOOL_KEY));
         assertEquals(DOUBLE_VALUE, jsonObject.get(DOUBLE_KEY).getAsDouble());

@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -20,7 +21,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonPrimitive;
@@ -56,58 +56,56 @@ class GsonConfigFormatterTest {
     }
 
     @Test
-    void testReadObjectIsInputStream() throws Exception {
-        final Object downcastedInputStream = new ByteArrayInputStream(TEST_JSON.getBytes(Charsets.UTF_8));
+    void testReadObjectIsInputStream() {
+        final Object downcastedInputStream = new ByteArrayInputStream(TEST_JSON.getBytes(StandardCharsets.UTF_8));
         assertEquals(TEST_MAP, configFormatter.read(downcastedInputStream, Map.class).get());
     }
 
     @Test
-    void testReadObjectIsMalformedInputStreamContent() throws Exception {
-        final Object downcastedInputStream = new ByteArrayInputStream(TEST_NOT_JSON.getBytes(Charsets.UTF_8));
+    void testReadObjectIsMalformedInputStreamContent() {
+        final Object downcastedInputStream = new ByteArrayInputStream(TEST_NOT_JSON.getBytes(StandardCharsets.UTF_8));
         assertThrows(NoSuchElementException.class, () -> configFormatter.read(downcastedInputStream, Map.class).get());
     }
 
     @Test
-    void testReadObjectIsReader() throws Exception {
+    void testReadObjectIsReader() {
         final Object downcastedInputStream = new InputStreamReader(new ByteArrayInputStream(
-                TEST_JSON.getBytes(Charsets.UTF_8)), Charsets.UTF_8);
+                TEST_JSON.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
         assertEquals(TEST_MAP, configFormatter.read(downcastedInputStream, Map.class).get());
     }
 
     @Test
-    void testReadObjectIsMalformedReaderContent() throws Exception {
+    void testReadObjectIsMalformedReaderContent() {
         final Object downcastedInputStream = new InputStreamReader(new ByteArrayInputStream(
-                TEST_NOT_JSON.getBytes(Charsets.UTF_8)), Charsets.UTF_8);
+                TEST_NOT_JSON.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
         assertThrows(NoSuchElementException.class, () -> configFormatter.read(downcastedInputStream, Map.class).get());
     }
 
     @Test
-    void testReadObjectIsString() throws Exception {
-        final Object downcastedString = TEST_JSON;
-        assertEquals(TEST_MAP, configFormatter.read(downcastedString, Map.class).get());
+    void testReadObjectIsString() {
+        assertEquals(TEST_MAP, configFormatter.read(TEST_JSON, Map.class).get());
     }
 
     @Test
-    void testReadObjectIsMalformedStringContent() throws Exception {
-        final Object downcastedString = TEST_NOT_JSON;
-        assertThrows(NoSuchElementException.class, () -> configFormatter.read(downcastedString, Map.class).get());
+    void testReadObjectIsMalformedStringContent() {
+        assertThrows(NoSuchElementException.class, () -> configFormatter.read(TEST_NOT_JSON, Map.class).get());
     }
 
     @Test
-    void testReadObjectIsJsonElement() throws Exception {
+    void testReadObjectIsJsonElement() {
         final Object jsonElement = new JsonPrimitive(TEST_VALUE);
         final String read = configFormatter.read(jsonElement, String.class).get();
         assertEquals(TEST_VALUE, read);
     }
 
     @Test
-    void testUnsupportedInputType() throws Exception {
+    void testUnsupportedInputType() {
         final Object downcastedDouble = 2.0;
         assertThrows(NoSuchElementException.class, () -> configFormatter.read(downcastedDouble, Map.class).get());
     }
 
     @Test
-    void testWrite() throws Exception {
+    void testWrite() {
         final Object written = configFormatter.write(TEST_MAP);
         assertTrue(written instanceof String);
         assertEquals(TEST_JSON, written);

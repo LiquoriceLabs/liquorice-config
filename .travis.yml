@@ -1,17 +1,24 @@
 dist: trusty
 language: java
 sudo: false
+jdk:
+  - openjdk11
 
-matrix:
-  include:
-  - os: linux
-    jdk: oraclejdk8
-  - os: linux
-    jdk: openjdk8
+# Only build master and pull requests
+branches:
+  only:
+    - master
 
 install: ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 
 script: ./mvnw clean verify -Dfull-build
+
+# Only deploy artifacts to nexus if master changes
+deploy:
+  - provider: script
+    script: ./mvnw clean deploy -DskipTests=true
+    on:
+      branch: master
 
 notifications:
   slack:

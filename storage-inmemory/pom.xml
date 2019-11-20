@@ -6,18 +6,12 @@
     <parent>
         <groupId>io.liquorice.config</groupId>
         <artifactId>parent</artifactId>
-        <version>0.3.4</version>
+        <version>0.4.0</version>
     </parent>
 
     <artifactId>storage-inmemory</artifactId>
 
     <dependencies>
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>io.liquorice.config</groupId>
             <artifactId>config-api</artifactId>
@@ -34,6 +28,10 @@
             <groupId>io.liquorice.config</groupId>
             <artifactId>test-support</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.liquorice.config</groupId>
+            <artifactId>utils</artifactId>
         </dependency>
     </dependencies>
 

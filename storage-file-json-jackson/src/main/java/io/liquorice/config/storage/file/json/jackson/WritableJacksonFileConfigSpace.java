@@ -1,12 +1,15 @@
 package io.liquorice.config.storage.file.json.jackson;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static io.liquorice.config.utils.StringUtils.requireNonEmpty;
+import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.function.Function;
 
@@ -19,12 +22,9 @@ import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import com.google.common.base.Charsets;
-import com.google.common.base.Strings;
 
 import io.liquorice.config.api.formatter.ConfigFormatter;
 import io.liquorice.config.api.storage.WritableConfigSpace;
-import io.liquorice.config.exception.ConfigurationException;
 
 /**
  * A FasterXML/jackson-backed implementation of a {@link WritableConfigSpace} where the contained items can be modified
@@ -32,12 +32,12 @@ import io.liquorice.config.exception.ConfigurationException;
 public class WritableJacksonFileConfigSpace extends ReadableJacksonFileConfigSpace implements WritableConfigSpace {
 
     private static final Function<FileChannel, Writer> DEFAULT_FILE_CHANNEL_WRITER_FUNCTION = internalFileChannel -> Channels
-            .newWriter(internalFileChannel, Charsets.UTF_8.name());
+            .newWriter(internalFileChannel, StandardCharsets.UTF_8.name());
 
     private final FileChannel fileChannel;
     private final Function<FileChannel, Writer> fileChannelWriterFunction;
 
-    private WritableJacksonFileConfigSpace(final Builder builder) throws IOException {
+    private WritableJacksonFileConfigSpace(final Builder builder) {
         super(builder.delegateBuilder.build());
         this.fileChannel = builder.fileChannel;
         this.fileChannelWriterFunction = builder.fileChannelWriterFunction;
@@ -47,7 +47,7 @@ public class WritableJacksonFileConfigSpace extends ReadableJacksonFileConfigSpa
      * {@inheritDoc}
      */
     public void remove(final String key) {
-        checkNotNull(Strings.emptyToNull(key));
+        requireNonEmpty(key);
 
         // Remove the cached copy of the property
         ((ObjectNode) getBackingJsonNode()).remove(key);
@@ -102,8 +102,8 @@ public class WritableJacksonFileConfigSpace extends ReadableJacksonFileConfigSpa
      */
     @Override
     public void setObject(final String key, final Object value) {
-        checkNotNull(Strings.emptyToNull(key));
-        checkNotNull(value, "Null value. Call ConfigSpace#remove instead.");
+        requireNonEmpty(key);
+        requireNonNull(value, "Null value. Call ConfigSpace#remove instead.");
 
         // Update the cached copy of the property
         final JsonNode jsonNode = value instanceof JsonNode ? (JsonNode) value : //
@@ -128,7 +128,7 @@ public class WritableJacksonFileConfigSpace extends ReadableJacksonFileConfigSpa
                 getBackingObjectMapper().writeValue(writer, getBackingJsonNode());
             }
         } catch (final IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
 
@@ -244,18 +244,12 @@ public class WritableJacksonFileConfigSpace extends ReadableJacksonFileConfigSpa
          * Build
          *
          * @return a new {@link WritableJacksonFileConfigSpace} built to specification
-         * @throws ConfigurationException
-         *             if there was a problem building
          */
-        public WritableJacksonFileConfigSpace build() throws ConfigurationException {
-            checkNotNull(fileChannel);
-            checkNotNull(fileChannelWriterFunction);
-            try {
-                return new WritableJacksonFileConfigSpace(this);
-            } catch (final IOException e) {
-                throw new ConfigurationException(String.format("Error building %s",
-                        WritableJacksonFileConfigSpace.class.getSimpleName()), e);
-            }
+        public WritableJacksonFileConfigSpace build() {
+            requireNonNull(fileChannel);
+            requireNonNull(fileChannelWriterFunction);
+
+            return new WritableJacksonFileConfigSpace(this);
         }
     }
 }
