@@ -1,10 +1,9 @@
 package io.liquorice.config.storage.inmemory;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static io.liquorice.config.utils.StringUtils.requireNonEmpty;
+import static java.util.Objects.requireNonNull;
 
 import java.util.Map;
-
-import com.google.common.base.Strings;
 
 import io.liquorice.config.api.formatter.ConfigFormatter;
 import io.liquorice.config.api.storage.WritableConfigSpace;
@@ -18,7 +17,7 @@ public class WritableMapConfigSpace extends ReadableMapConfigSpace implements Wr
      * {@inheritDoc}
      */
     public void remove(final String key) {
-        checkNotNull(Strings.emptyToNull(key));
+        requireNonEmpty(key);
 
         getBackingMap().remove(key);
     }
@@ -32,7 +31,7 @@ public class WritableMapConfigSpace extends ReadableMapConfigSpace implements Wr
      *            the properties to seed this {@link WritableMapConfigSpace} with
      */
     public WritableMapConfigSpace(final ConfigFormatter configFormatter, final Map<String, Object> properties) {
-        super(checkNotNull(configFormatter), checkNotNull(properties));
+        super(requireNonNull(configFormatter), requireNonNull(properties));
     }
 
     /**
@@ -72,8 +71,8 @@ public class WritableMapConfigSpace extends ReadableMapConfigSpace implements Wr
      */
     @Override
     public void setObject(final String key, final Object value) {
-        checkNotNull(Strings.emptyToNull(key));
-        checkNotNull(value, "Null value. Call ConfigSpace#remove to instead.");
+        requireNonEmpty(key);
+        requireNonNull(value, "Null value. Call ConfigSpace#remove to instead.");
 
         getBackingMap().put(key, getConfigFormatter().write(value));
     }

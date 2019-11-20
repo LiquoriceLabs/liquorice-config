@@ -1,16 +1,16 @@
 package io.liquorice.config.formatter.json.gson;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.google.common.base.Charsets;
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -26,7 +26,7 @@ public class GsonConfigFormatter implements StreamableConfigFormatter {
 
     private static final GsonBuilder DEFAULT_GSON_BUILDER = new GsonBuilder();
 
-    private Gson gson;
+    private final Gson gson;
 
     /**
      * CTOR
@@ -70,7 +70,7 @@ public class GsonConfigFormatter implements StreamableConfigFormatter {
      */
     @Override
     public <T> Optional<T> read(final InputStream inputStream, final Class<T> valueType) {
-        return read(new InputStreamReader(inputStream, Charsets.UTF_8), valueType);
+        return read(new InputStreamReader(inputStream, StandardCharsets.UTF_8), valueType);
     }
 
     /**
@@ -126,7 +126,7 @@ public class GsonConfigFormatter implements StreamableConfigFormatter {
          */
         public Builder() {
             this.gsonBuilder = DEFAULT_GSON_BUILDER;
-            this.typeAdapters = Maps.newHashMap();
+            this.typeAdapters = new HashMap<>();
         }
 
         /**
@@ -173,9 +173,9 @@ public class GsonConfigFormatter implements StreamableConfigFormatter {
          * @return a new {@link GsonConfigFormatter} built to specification
          */
         public GsonConfigFormatter build() {
-            checkNotNull(gsonBuilder);
+            requireNonNull(gsonBuilder);
             for (final Map.Entry<Type, Object> entry : typeAdapters.entrySet()) {
-                this.gsonBuilder.registerTypeAdapter(checkNotNull(entry.getKey()), checkNotNull(entry.getValue()));
+                this.gsonBuilder.registerTypeAdapter(requireNonNull(entry.getKey()), requireNonNull(entry.getValue()));
             }
 
             return new GsonConfigFormatter(this);

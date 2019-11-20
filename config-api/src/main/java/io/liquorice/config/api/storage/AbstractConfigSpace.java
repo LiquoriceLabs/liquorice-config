@@ -1,6 +1,6 @@
 package io.liquorice.config.api.storage;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import io.liquorice.config.api.formatter.ConfigFormatter;
 import io.liquorice.config.exception.ConfigurationException;
@@ -12,7 +12,7 @@ import io.liquorice.config.exception.ConfigurationException;
  */
 public abstract class AbstractConfigSpace implements ConfigSpace {
 
-    private ConfigFormatter configFormatter;
+    private final ConfigFormatter configFormatter;
 
     /**
      * CTOR
@@ -21,7 +21,7 @@ public abstract class AbstractConfigSpace implements ConfigSpace {
      *            the {@link ConfigFormatter} to use for retrieivng properties
      */
     public AbstractConfigSpace(final ConfigFormatter configFormatter) {
-        checkNotNull(configFormatter, "Config formatter cannot be null");
+        requireNonNull(configFormatter, "Config formatter cannot be null");
         this.configFormatter = configFormatter;
     }
 
@@ -30,7 +30,7 @@ public abstract class AbstractConfigSpace implements ConfigSpace {
      */
     @Override
     public boolean getBoolean(final String key, final boolean defaultValue) {
-        checkNotNull(key, "Key cannot be null");
+        requireNonNull(key, "Key cannot be null");
         try {
             return hasValue(key) ? getBooleanRequired(key) : defaultValue;
         } catch (final Exception e) {
@@ -48,7 +48,7 @@ public abstract class AbstractConfigSpace implements ConfigSpace {
      */
     @Override
     public double getDouble(final String key, final double defaultValue) {
-        checkNotNull(key, "Key cannot be null");
+        requireNonNull(key, "Key cannot be null");
         try {
             return hasValue(key) ? getDoubleRequired(key) : defaultValue;
         } catch (final Exception e) {
@@ -66,7 +66,7 @@ public abstract class AbstractConfigSpace implements ConfigSpace {
      */
     @Override
     public int getInt(final String key, final int defaultValue) {
-        checkNotNull(key, "Key cannot be null");
+        requireNonNull(key, "Key cannot be null");
         try {
             return hasValue(key) ? getIntRequired(key) : defaultValue;
         } catch (final Exception e) {
@@ -84,7 +84,7 @@ public abstract class AbstractConfigSpace implements ConfigSpace {
      */
     @Override
     public long getLong(final String key, final long defaultValue) {
-        checkNotNull(key, "Key cannot be null");
+        requireNonNull(key, "Key cannot be null");
         try {
             return hasValue(key) ? getLongRequired(key) : defaultValue;
         } catch (final Exception e) {
@@ -102,7 +102,7 @@ public abstract class AbstractConfigSpace implements ConfigSpace {
      */
     @Override
     public <T> T getObject(final String key, final T defaultValue, final Class<T> clazz) {
-        checkNotNull(key, "Key cannot be null");
+        requireNonNull(key, "Key cannot be null");
         try {
             return hasValue(key) ? getObjectRequired(key, clazz) : defaultValue;
         } catch (final Exception e) {
@@ -120,7 +120,7 @@ public abstract class AbstractConfigSpace implements ConfigSpace {
      */
     @Override
     public String getString(final String key, final String defaultValue) {
-        checkNotNull(key, "Key cannot be null");
+        requireNonNull(key, "Key cannot be null");
         try {
             return hasValue(key) ? getStringRequired(key) : defaultValue;
         } catch (final Exception e) {

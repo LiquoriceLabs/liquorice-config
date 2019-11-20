@@ -21,13 +21,13 @@ import static io.liquorice.config.test.support.ConfigSpaceTestData.LONG_VALUE;
 import static io.liquorice.config.test.support.ConfigSpaceTestData.STRING_KEY;
 import static io.liquorice.config.test.support.ConfigSpaceTestData.STRING_VALUE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Function;
 
@@ -37,7 +37,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.google.common.base.Charsets;
 import com.google.gson.GsonBuilder;
 
 import io.liquorice.config.api.formatter.ConfigFormatter;
@@ -58,10 +57,10 @@ class ReadableGsonFileConfigSpaceTest {
     private ReadableGsonFileConfigSpace configSpace;
 
     @BeforeEach
-    void setup() throws Exception {
+    void setup() {
         // Initialize seed properties
         final InputStreamReader isr = new InputStreamReader(new ByteArrayInputStream(
-                JSON_STRING.getBytes(Charsets.UTF_8)), Charsets.UTF_8);
+                JSON_STRING.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
 
         final Function<FileChannel, Reader> fileChannelReaderFunction = internalFileChannel -> isr;
 

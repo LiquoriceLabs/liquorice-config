@@ -27,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Function;
 
@@ -37,7 +38,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Charsets;
 
 import io.liquorice.config.api.formatter.ConfigFormatter;
 import io.liquorice.config.exception.ConfigurationException;
@@ -57,10 +57,10 @@ public class ReadableJacksonFileConfigSpaceTest {
     private ReadableJacksonFileConfigSpace configSpace;
 
     @BeforeEach
-    public void setup() throws Exception {
+    public void setup() {
         // Initialize seed properties
         final InputStreamReader isr = new InputStreamReader(new ByteArrayInputStream(
-                JSON_STRING.getBytes(Charsets.UTF_8)), Charsets.UTF_8);
+                JSON_STRING.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
 
         final Function<FileChannel, Reader> fileChannelReaderFunction = internalFileChannel -> isr;
 

@@ -1,16 +1,15 @@
 package io.liquorice.config.storage.file.properties;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static io.liquorice.config.utils.StringUtils.requireNonEmpty;
+import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.function.Function;
-
-import com.google.common.base.Charsets;
-import com.google.common.base.Strings;
 
 import io.liquorice.config.api.formatter.ConfigFormatter;
 import io.liquorice.config.api.storage.AbstractConfigSpace;
@@ -24,7 +23,7 @@ import io.liquorice.config.exception.ConfigurationException;
 public class ReadablePropertiesFileConfigSpace extends AbstractConfigSpace {
 
     private static final Function<FileChannel, Reader> DEFAULT_FILE_CHANNEL_READER_FUNCTION = internalFileChannel -> Channels
-            .newReader(checkNotNull(internalFileChannel), Charsets.UTF_8.name());
+            .newReader(requireNonNull(internalFileChannel), StandardCharsets.UTF_8.name());
 
     private final FileChannel fileChannel;
     private final Function<FileChannel, Reader> fileChannelReaderFunction;
@@ -128,7 +127,7 @@ public class ReadablePropertiesFileConfigSpace extends AbstractConfigSpace {
      */
     @Override
     public boolean hasValue(final String key) {
-        return properties.containsKey(checkNotNull(Strings.emptyToNull(key)));
+        return properties.containsKey(requireNonEmpty(key));
     }
 
     /**
@@ -144,8 +143,8 @@ public class ReadablePropertiesFileConfigSpace extends AbstractConfigSpace {
     }
 
     private Object getNonNullable(final String key) {
-        final Object value = properties.getProperty(checkNotNull(Strings.emptyToNull(key)));
-        checkNotNull(value);
+        final Object value = properties.getProperty(requireNonEmpty(key));
+        requireNonNull(value);
         return value;
     }
 
@@ -212,9 +211,9 @@ public class ReadablePropertiesFileConfigSpace extends AbstractConfigSpace {
          *             if there was a problem building
          */
         public ReadablePropertiesFileConfigSpace build() throws ConfigurationException {
-            checkNotNull(configFormatter);
-            checkNotNull(fileChannel);
-            checkNotNull(fileChannelReaderFunction);
+            requireNonNull(configFormatter);
+            requireNonNull(fileChannel);
+            requireNonNull(fileChannelReaderFunction);
             try {
                 return new ReadablePropertiesFileConfigSpace(this);
             } catch (final IOException e) {

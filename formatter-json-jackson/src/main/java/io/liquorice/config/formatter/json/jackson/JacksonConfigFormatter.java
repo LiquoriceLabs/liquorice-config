@@ -1,10 +1,11 @@
 package io.liquorice.config.formatter.json.jackson;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
@@ -110,7 +111,7 @@ public class JacksonConfigFormatter implements StreamableConfigFormatter {
         try {
             return objectMapper.writeValueAsString(value);
         } catch (final JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
 
@@ -149,7 +150,7 @@ public class JacksonConfigFormatter implements StreamableConfigFormatter {
          * @return this
          */
         public Builder withRegisteredModule(final Module module) {
-            this.modulesToRegister.add(checkNotNull(module));
+            this.modulesToRegister.add(requireNonNull(module));
             return this;
         }
 
@@ -161,7 +162,7 @@ public class JacksonConfigFormatter implements StreamableConfigFormatter {
          * @return this
          */
         public Builder withRegisteredModules(final Collection<Module> modules) {
-            this.modulesToRegister.addAll(checkNotNull(modules));
+            this.modulesToRegister.addAll(requireNonNull(modules));
             return this;
         }
 
@@ -171,9 +172,9 @@ public class JacksonConfigFormatter implements StreamableConfigFormatter {
          * @return a new {@link JacksonConfigFormatter} built to specification
          */
         public JacksonConfigFormatter build() {
-            checkNotNull(objectMapper);
+            requireNonNull(objectMapper);
             for (final Module module : modulesToRegister) {
-                this.objectMapper.registerModule(checkNotNull(module));
+                this.objectMapper.registerModule(requireNonNull(module));
             }
             return new JacksonConfigFormatter(this);
         }

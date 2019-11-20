@@ -1,24 +1,26 @@
 package io.liquorice.config.storage.file.json.gson;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Strings;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-import io.liquorice.config.api.formatter.ConfigFormatter;
-import io.liquorice.config.api.storage.WritableConfigSpace;
-import io.liquorice.config.exception.ConfigurationException;
+import static io.liquorice.config.utils.StringUtils.requireNonEmpty;
+import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.lang.reflect.Type;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.function.Function;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+
+import io.liquorice.config.api.formatter.ConfigFormatter;
+import io.liquorice.config.api.storage.WritableConfigSpace;
+import io.liquorice.config.exception.ConfigurationException;
 
 /**
  * A Google/Gson-backed implementation of a {@link WritableConfigSpace} where the contained items can be modified
@@ -26,12 +28,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class WritableGsonFileConfigSpace extends ReadableGsonFileConfigSpace implements WritableConfigSpace {
 
     private static final Function<FileChannel, Writer> DEFAULT_FILE_CHANNEL_WRITER_FUNCTION = internalFileChannel -> Channels
-            .newWriter(internalFileChannel, Charsets.UTF_8.name());
+            .newWriter(internalFileChannel, StandardCharsets.UTF_8.name());
 
     private final FileChannel fileChannel;
     private final Function<FileChannel, Writer> fileChannelWriterFunction;
 
-    private WritableGsonFileConfigSpace(final Builder builder) throws IOException {
+    private WritableGsonFileConfigSpace(final Builder builder) {
         super(builder.delegateBuilder.build());
         this.fileChannel = builder.fileChannel;
         this.fileChannelWriterFunction = builder.fileChannelWriterFunction;
@@ -41,7 +43,7 @@ public class WritableGsonFileConfigSpace extends ReadableGsonFileConfigSpace imp
      * {@inheritDoc}
      */
     public void remove(final String key) {
-        checkNotNull(Strings.emptyToNull(key));
+        requireNonEmpty(key);
 
         // Remove the cached copy of the property
         getBackingJsonObject().remove(key);
@@ -96,8 +98,8 @@ public class WritableGsonFileConfigSpace extends ReadableGsonFileConfigSpace imp
      */
     @Override
     public void setObject(final String key, final Object value) {
-        checkNotNull(Strings.emptyToNull(key));
-        checkNotNull(value, "Null value. Call ConfigSpace#remove instead.");
+        requireNonEmpty(key);
+        requireNonNull(value, "Null value. Call ConfigSpace#remove instead.");
 
         // Update the cached copy of the property
         final JsonElement jsonElement = value instanceof JsonElement ? (JsonElement) value : getBackingGson()
@@ -123,7 +125,7 @@ public class WritableGsonFileConfigSpace extends ReadableGsonFileConfigSpace imp
                 getBackingGson().toJson(getBackingJsonObject(), writer);
             }
         } catch (final IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
 
@@ -241,18 +243,12 @@ public class WritableGsonFileConfigSpace extends ReadableGsonFileConfigSpace imp
          * Build
          *
          * @return a new {@link WritableGsonFileConfigSpace} built to specification
-         * @throws ConfigurationException
-         *             if there was a problem building
          */
-        public WritableGsonFileConfigSpace build() throws ConfigurationException {
-            checkNotNull(fileChannel);
-            checkNotNull(fileChannelWriterFunction);
-            try {
-                return new WritableGsonFileConfigSpace(this);
-            } catch (final IOException e) {
-                throw new ConfigurationException(String.format("Error building %s",
-                        WritableGsonFileConfigSpace.class.getSimpleName()), e);
-            }
+        public WritableGsonFileConfigSpace build() {
+            requireNonNull(fileChannel);
+            requireNonNull(fileChannelWriterFunction);
+
+            return new WritableGsonFileConfigSpace(this);
         }
     }
 }

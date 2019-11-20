@@ -1,18 +1,17 @@
 package io.liquorice.config.storage.file.json.gson;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static io.liquorice.config.utils.StringUtils.requireNonEmpty;
+import static java.util.Objects.requireNonNull;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Strings;
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -32,7 +31,9 @@ import io.liquorice.config.formatter.json.gson.GsonConfigFormatter;
 public class ReadableGsonFileConfigSpace extends AbstractConfigSpace {
 
     private static final Function<FileChannel, Reader> DEFAULT_FILE_CHANNEL_READER_FUNCTION = internalFileChannel -> Channels
-            .newReader(checkNotNull(internalFileChannel), Charsets.UTF_8.name());
+            .newReader(requireNonNull(internalFileChannel), StandardCharsets.UTF_8.name());
+
+    private static final GsonBuilder DEFAULT_GSON_BUILDER = new GsonBuilder();
 
     private final FileChannel fileChannel;
     private final Function<FileChannel, Reader> fileChannelReaderFunction;
@@ -54,7 +55,7 @@ public class ReadableGsonFileConfigSpace extends AbstractConfigSpace {
         this.rootObject = configSpace.rootObject;
     }
 
-    private ReadableGsonFileConfigSpace(final Builder builder) throws IOException {
+    private ReadableGsonFileConfigSpace(final Builder builder) {
         super(builder.configFormatter);
         this.fileChannel = builder.fileChannel;
         this.fileChannelReaderFunction = builder.fileChannelReaderFunction;
@@ -120,7 +121,7 @@ public class ReadableGsonFileConfigSpace extends AbstractConfigSpace {
      */
     @Override
     public boolean hasValue(final String key) {
-        return rootObject.has(checkNotNull(Strings.emptyToNull(key)));
+        return rootObject.has(requireNonEmpty(key));
     }
 
     /**
@@ -148,8 +149,8 @@ public class ReadableGsonFileConfigSpace extends AbstractConfigSpace {
     }
 
     private JsonElement getNonNullable(final String key) {
-        final JsonElement value = getBackingJsonObject().get(checkNotNull(Strings.emptyToNull(key)));
-        checkNotNull(value);
+        final JsonElement value = getBackingJsonObject().get(requireNonEmpty(key));
+        requireNonNull(value);
         return value;
     }
 
@@ -168,9 +169,10 @@ public class ReadableGsonFileConfigSpace extends AbstractConfigSpace {
          * CTOR
          */
         public Builder() {
+            this.gsonBuilder = DEFAULT_GSON_BUILDER;
             this.configFormatter = new GsonConfigFormatter.Builder().build();
             this.fileChannelReaderFunction = DEFAULT_FILE_CHANNEL_READER_FUNCTION;
-            this.typeAdapters = Maps.newHashMap();
+            this.typeAdapters = new HashMap<>();
         }
 
         /**
@@ -254,25 +256,18 @@ public class ReadableGsonFileConfigSpace extends AbstractConfigSpace {
          * Build
          *
          * @return a new {@link ReadableGsonFileConfigSpace} built to specification
-         * @throws ConfigurationException
-         *             if there was a problem building
          */
-        public ReadableGsonFileConfigSpace build() throws ConfigurationException {
-            checkNotNull(configFormatter);
-            checkNotNull(fileChannel);
-            checkNotNull(fileChannelReaderFunction);
-            checkNotNull(gsonBuilder);
+        public ReadableGsonFileConfigSpace build() {
+            requireNonNull(configFormatter);
+            requireNonNull(fileChannel);
+            requireNonNull(fileChannelReaderFunction);
+            requireNonNull(gsonBuilder);
 
             for (final Map.Entry<Type, Object> entry : typeAdapters.entrySet()) {
-                gsonBuilder.registerTypeAdapter(checkNotNull(entry.getKey()), checkNotNull(entry.getValue()));
+                gsonBuilder.registerTypeAdapter(requireNonNull(entry.getKey()), requireNonNull(entry.getValue()));
             }
 
-            try {
-                return new ReadableGsonFileConfigSpace(this);
-            } catch (final IOException e) {
-                throw new ConfigurationException(String.format("Error building %s",
-                        ReadableGsonFileConfigSpace.class.getSimpleName()), e);
-            }
+            return new ReadableGsonFileConfigSpace(this);
         }
     }
 }

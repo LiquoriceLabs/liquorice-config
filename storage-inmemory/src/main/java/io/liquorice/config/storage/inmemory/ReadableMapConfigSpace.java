@@ -1,11 +1,10 @@
 package io.liquorice.config.storage.inmemory;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static io.liquorice.config.utils.StringUtils.requireNonEmpty;
+import static java.util.Objects.requireNonNull;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.base.Strings;
-import com.google.common.collect.Maps;
 
 import io.liquorice.config.api.formatter.ConfigFormatter;
 import io.liquorice.config.api.storage.AbstractConfigSpace;
@@ -29,8 +28,8 @@ public class ReadableMapConfigSpace extends AbstractConfigSpace {
      *            the properties to seed this {@link ReadableMapConfigSpace} with
      */
     public ReadableMapConfigSpace(final ConfigFormatter configFormatter, final Map<String, Object> properties) {
-        super(checkNotNull(configFormatter));
-        map = Maps.newHashMap(checkNotNull(properties));
+        super(requireNonNull(configFormatter));
+        map = new HashMap<>(requireNonNull(properties));
     }
 
     /**
@@ -90,7 +89,7 @@ public class ReadableMapConfigSpace extends AbstractConfigSpace {
      */
     @Override
     public boolean hasValue(final String key) {
-        return map.containsKey(checkNotNull(Strings.emptyToNull(key)));
+        return map.containsKey(requireNonEmpty(key));
     }
 
     /**
@@ -107,8 +106,6 @@ public class ReadableMapConfigSpace extends AbstractConfigSpace {
 
 
     private Object getNonNullable(final String key) {
-        final Object value = map.get(checkNotNull(Strings.emptyToNull(key)));
-        checkNotNull(value);
-        return value;
+        return requireNonNull(map.get(requireNonEmpty(key)));
     }
 }

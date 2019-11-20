@@ -48,4 +48,12 @@
     <activeProfile>liquorice.nexus</activeProfile>
   </activeProfiles>
 
+  <servers>
+    <server>
+      <id>liquorice.nexus</id>
+      <username>${env.LIQ_NEXUS_USER}</username>
+      <password>${env.LIQ_NEXUS_PASSWORD}</password>
+    </server>
+  </servers>
+
 </settings>

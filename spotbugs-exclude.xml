@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+  This file contains some false positive bugs detected by spotbugs. Their
+  false positive nature has been analyzed individually and they have been
+  put here to instruct spotbugs it must ignore them.
+-->
+<FindBugsFilter>
+    <!--
+        Known false positive with "try-with-resources" on java11
+            See: https://github.com/spotbugs/spotbugs/issues/756
+      -->
+    <Match>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE" />
+    </Match>
+</FindBugsFilter>
